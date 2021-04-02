@@ -1,0 +1,45 @@
+- name: Check that the /dev/xvdh exists
+  stat:
+    path: /dev/xvdh
+  register: mount_volume
+
+- debug:
+    msg: "/dev/xvdh exists"
+  when: mount_volume.stat.exists
+
+- name: Create a xfs
+  filesystem:
+    fstype: xfs
+    dev: /dev/xvdh
+  when: mount_volume.stat.exists == True
+
+
+- name: Creates directory
+  file:
+    path: /data
+    state: directory
+  when: mount_volume.stat.exists == True         
+
+- name: Mount 
+  mount:
+    path: /data
+    src: /dev/xvdh
+    state: present
+    fstype: xfs
+  when: mount_volume.stat.exists == True    
+
+- name: check Mount 
+  command: mountpoint -q /data
+  register: volume_stat
+  failed_when: False
+  changed_when: False
+
+
+- debug:
+    msg: volume_stat.rc {{ volume_stat.rc }} 
+  when: mount_volume.stat.exists        
+
+- name: Mount manualy
+  shell: 'mount /dev/xvdh /data'
+  when: mount_volume.stat.exists        
+  ignore_errors: yes      
