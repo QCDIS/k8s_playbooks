@@ -1,0 +1,9 @@
+- hosts: all
+  become: yes
+  tasks:
+    
+    
+    - include: ec2/ec2_mount.yaml
+    - include: docker/install_docker.yaml
+    - include: install_k8s_prerequisites.yam
+    
