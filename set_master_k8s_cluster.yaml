@@ -1,0 +1,119 @@
+---        
+- hosts: master
+  gather_facts: no
+  tasks:   
+  
+    - name: check kubectl
+      shell: kubectl get all
+      register: kubectl_command_result
+      ignore_errors: True
+      
+#     - name: print kubectl cluster return code
+#       debug:
+#         msg: "kubectl return code : {{ kubectl_command_result.rc}}"   
+
+    - name: Get the public IP address of the network.
+      uri:
+        url: https://api.ipify.org?format=json
+        method: Get
+      changed_when: false
+      register: public_ip
+      until: public_ip.status == 200
+      retries: 6
+      delay: 10
+      
+    - name: disable swap
+      become: yes
+      shell: swapoff -a     
+      when: kubectl_command_result.rc != 0
+  
+    - name: kubeadm init
+      shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}" 
+      become: yes  
+      when: kubectl_command_result.rc != 0
+  
+    - name: Create directory .kube
+      file:
+        path: $HOME/.kube
+        state: directory
+        recurse: yes        
+      when: kubectl_command_result.rc != 0
+        
+    - name: copy admin.conf
+      become: yes     
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "/home/{{ ansible_ssh_user }}/.kube/config"
+        owner: "{{ ansible_ssh_user }}"
+        group: "{{ ansible_ssh_user }}"
+        remote_src: True
+      when: kubectl_command_result.rc != 0
+      
+    - name: set bridge
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        state: present    
+      become: yes   
+      
+    - name: kubeadm set weave
+      shell: export kubever=$(kubectl version | base64 | tr -d '\n') && kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+       
+    - name: kubectl taint nodes
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master-  
+      when: kubectl_command_result.rc != 0
+      
+    - name: open api ports
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: yes
+        state: enabled
+      become: yes
+
+    - name: open api ports
+      ansible.posix.firewalld:
+        port: 6443/tcp
+        permanent: yes
+        state: enabled
+      become: yes
+
+    - name: open  Nodeport
+      ansible.posix.firewalld:
+        port: 30000-32767/tcp
+        permanent: yes
+        state: enabled
+      become: yes
+
+    - name: Check all port are accessible
+      wait_for:
+        host:
+        port: "{{ item }}"
+        state: started         # Port should be open
+        delay: 0               # No wait before first check (sec)
+        timeout: 3             # Stop checking after timeout (sec)
+      ignore_errors: yes
+      with_items:
+        - 6443
+        - 30000
+        - 32767
+        
+- hosts: master
+  gather_facts: no
+  tasks: 
+
+    - name: get nodes
+      shell: kubectl get nodes
+      register: nodes_out
+              
+    - name: print nodes
+      debug:
+        var: nodes_out
+        
+        
+    - name: get api key
+      shell: kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t'
+      register: api_key
+              
+    - name: print api_key
+      debug:
+        var: api_key
