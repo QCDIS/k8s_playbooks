@@ -8,4 +8,5 @@
         k8s_namespace: "{{ item }}"
       with_items:
         - "kubernetes-dashboard"
+        - "default"
         
