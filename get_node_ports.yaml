@@ -13,5 +13,4 @@
 
 - set_stats:
     data:
-      node_port: "{{ item }}"
-  loop: node_port.results
+      node_port: results
