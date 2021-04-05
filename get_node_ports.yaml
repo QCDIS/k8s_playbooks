@@ -1,0 +1,14 @@
+- name: Get a list of services
+  k8s_info:
+    kind: Service
+    namespace: "{{ k8s_namespace }}"
+  register: k8s_services
+  
+- local_action: copy content={{ k8s_namespace }} dest=/tmp/k8s_services_"{{ k8s_namespace }}".json
+
+- shell: jq '.k8s_services.resources[] | select (.spec.ports[].nodePort != null ) | .spec.ports[].nodePort' /tmp/k8s_services_"{{ k8s_namespace }}".json
+  register: node_port
+  
+- set_stats:
+    data:
+      node_port: "{{ node_port.stdout }}"
