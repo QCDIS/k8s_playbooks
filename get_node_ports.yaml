@@ -4,9 +4,9 @@
     namespace: "{{ k8s_namespace }}"
   register: k8s_services
   
-- local_action: copy content={{ k8s_namespace }} dest=./k8s_services_{{ k8s_namespace }}.json
+- local_action: copy content={{ k8s_namespace }} dest=k8s_services_{{ k8s_namespace }}.json
 
-- shell: jq '.k8s_services.resources[] | select (.spec.ports[].nodePort != null ) | .spec.ports[].nodePort' ./k8s_services_{{ k8s_namespace }}.json
+- shell: jq '.k8s_services.resources[] | select (.spec.ports[].nodePort != null ) | .spec.ports[].nodePort' k8s_services_{{ k8s_namespace }}.json
   register: node_port
   
 - set_stats:
