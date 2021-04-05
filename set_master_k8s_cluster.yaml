@@ -63,26 +63,26 @@
       shell: kubectl taint nodes --all node-role.kubernetes.io/master-  
       when: kubectl_command_result.rc != 0
       
-    - name: open api ports
-      ansible.posix.firewalld:
-        port: 8080/tcp
-        permanent: yes
-        state: enabled
-      become: yes
+#     - name: open api ports
+#       ansible.posix.firewalld:
+#         port: 8080/tcp
+#         permanent: yes
+#         state: enabled
+#       become: yes
 
-    - name: open api ports
-      ansible.posix.firewalld:
-        port: 6443/tcp
-        permanent: yes
-        state: enabled
-      become: yes
+#     - name: open api ports
+#       ansible.posix.firewalld:
+#         port: 6443/tcp
+#         permanent: yes
+#         state: enabled
+#       become: yes
 
-    - name: open  Nodeport
-      ansible.posix.firewalld:
-        port: 30000-32767/tcp
-        permanent: yes
-        state: enabled
-      become: yes
+#     - name: open  Nodeport
+#       ansible.posix.firewalld:
+#         port: 30000-32767/tcp
+#         permanent: yes
+#         state: enabled
+#       become: yes
 
     - name: Check all port are accessible
       wait_for:
