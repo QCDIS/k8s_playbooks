@@ -7,7 +7,7 @@
 - name: "query node ports cluster names"
   debug:
     var: item
-  loop: "{{ k8s_services |  json_query('resources[*]') }}"
+  loop: "{{ k8s_services |  json_query('resources[*].spec') }}"
   register: node_port
   
 
