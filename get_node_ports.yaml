@@ -7,7 +7,7 @@
 - name: "Display all cluster names"
   debug:
     var: item
-  loop: "{{ k8s_services['resources'] | json_query('domain.cluster[*].name') }}"
+  loop: "{{ k8s_services['resources'] }}"
   
 
 - set_stats:
