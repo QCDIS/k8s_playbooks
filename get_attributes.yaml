@@ -3,7 +3,7 @@
   gather_facts: no
   tasks:
   
-    - include:  get_services.yaml
+    - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
       with_items:
