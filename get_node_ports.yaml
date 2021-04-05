@@ -4,10 +4,10 @@
     namespace: "{{ k8s_namespace }}"
   register: k8s_services
   
-- debug:
+- name: "Display all cluster names"
+  debug:
     var: item
-  loop: "{{ k8s_services | json_query('spec.ports[*].name') }}"
-  register: node_port
+  loop: "{{ k8s_services | json_query('domain.cluster[*].name') }}"
   
 
 - set_stats:
