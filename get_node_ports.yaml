@@ -13,4 +13,6 @@
 
 - set_stats:
     data:
-      node_port: "{{ node_port.results }}"
+      node_port: 
+       - "{{ item[0] }}"
+  loop: node_port.results
