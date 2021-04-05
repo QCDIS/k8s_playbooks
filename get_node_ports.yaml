@@ -11,7 +11,7 @@
   register: node_ports
  
 - debug:
-    var: node_ports
+    var: node_ports.results
   
 
 # - set_stats:
