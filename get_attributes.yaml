@@ -21,9 +21,18 @@
       retries: 6
       delay: 10
       
+
+    - set_fact:
+        attributes: 
+          service_urls: "{{ mydict2 | default({ 'Name': 'Sarav'})}}"
+          
+    - name: Display the Dictionaries
+      debug: var="{{item}}"
+      loop:
+        - 'mydict2'
       
 
-    - debug:
-        var: item.value[0].item
-      loop: "{{ node_ports | dict2items }}"
+#     - debug:
+#         var: item.value[0].item
+#       loop: "{{ node_ports | dict2items }}"
   
