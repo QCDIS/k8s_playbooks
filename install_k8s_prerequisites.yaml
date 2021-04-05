@@ -42,3 +42,9 @@
     - python-pip      
     - virtualenv
     - firewalld
+
+
+- pip:
+  name:
+    - openshift==0.11.0
+    - kubernetes==11.0.0
