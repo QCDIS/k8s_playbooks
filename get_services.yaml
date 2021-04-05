@@ -8,3 +8,8 @@
 - name: print k8s_secrets
   debug:
     var: k8s_services      
+    
+    
+# - set_stats:
+#     data: "{{ attributes }}"
+#   register: attributes
