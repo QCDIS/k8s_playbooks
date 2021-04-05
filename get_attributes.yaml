@@ -28,7 +28,7 @@
           
     - name: Display the Dictionaries
       debug: 
-        var: service_urls
+        var: attributes
       
 
 #     - debug:
