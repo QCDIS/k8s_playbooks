@@ -4,6 +4,8 @@
   tasks:
   
     - include:  get_services.yaml
-      vars: "{{ item }}"
+      vars: 
+        k8s_namespace: "{{ item }}"
       with_items:
         - "kubernetes-dashboard"
+        
