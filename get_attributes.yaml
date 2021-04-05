@@ -24,6 +24,6 @@
       
 
     - debug:
-        var: item.value[0]
+        var: item.value[0].item
       loop: "{{ node_ports | dict2items }}"
   
