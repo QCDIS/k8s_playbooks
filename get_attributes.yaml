@@ -24,7 +24,9 @@
 
     - set_fact:
         attributes: 
-          service_urls: "{{ service_urls | default({ 'Name': 'Sarav'})}}"
+          service_urls: 
+          - "https://{{public_ip.ip}}":item.value[0].item
+      loop: "{{ node_ports | dict2items }}"          
           
     - name: Display the Dictionaries
       debug: 
