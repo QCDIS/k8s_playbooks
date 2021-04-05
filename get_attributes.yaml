@@ -25,7 +25,7 @@
     - set_fact:
         attributes: 
           service_urls: 
-          - "https://{{public_ip.ip}}:{{item.value[0].item}}"
+          - "https://{{public_ip}}:{{item.value[0].item}}"
       loop: "{{ node_ports | dict2items }}"          
           
     - name: Display the Dictionaries
