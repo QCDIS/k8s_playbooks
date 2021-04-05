@@ -2,6 +2,9 @@
   become: yes
   tasks:
     
+    - shell: ansible-galaxy collection install "{{item}}"
+      with_items:
+       - "ansible.posix"
     
     - include: ec2/ec2_mount.yaml
     - include: docker/install_docker.yaml
