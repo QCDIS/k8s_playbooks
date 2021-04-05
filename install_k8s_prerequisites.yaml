@@ -27,12 +27,9 @@
 #     - name: Install aptitude using apt
 #       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
 
-- name: Install required packages
-  apt:
-    name: "{{ packages }}"
-    update_cache: yes
-  vars:
-    packages:
+
+- package:
+    name: 
     - ca-certificates
     - apt-transport-https
     - curl
@@ -42,6 +39,10 @@
     - python-pip      
     - virtualenv
     - firewalld
+    - jq 
+    state: present
+  become: yes
+     
 
 - pip:
     name:
