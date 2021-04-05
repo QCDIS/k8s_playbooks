@@ -13,4 +13,4 @@
 
 - set_stats:
     data:
-      node_port: results
+      node_port: "{{node_port.results}}"
