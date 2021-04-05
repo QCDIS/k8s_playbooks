@@ -1,11 +1,6 @@
 - hosts: all
   become: yes
-  tasks:
-  
-    - shell: ansible-galaxy collection install "{{item}}"
-      with_items:
-        - "ansible.posix"
-       
+  tasks:       
     - include: ec2/ec2_mount.yaml
     - include: docker/install_docker.yaml
     - include: install_k8s_prerequisites.yaml
