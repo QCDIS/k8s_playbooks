@@ -8,9 +8,9 @@
   debug:
     var: item
   loop: "{{ k8s_services |  json_query('resources[*].spec.ports[?nodePort!=None].nodePort') }}"
-  register: node_port
+  register: node_ports
   
 
 - set_stats:
     data:
-      node_port: "{{node_port.results}}"
+      node_port: "{{node_ports.results}}"
