@@ -25,5 +25,5 @@
 
 - debug:
     var: item
-  loop: "{{ node_port }}"
+  loop: "{{ node_ports }}"
   
