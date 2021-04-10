@@ -11,12 +11,12 @@
   register: node_ports
   
   
-  - set_stats:
-      data: 
-        kubernetes:
-          attributes: 
-            service_urls: 
-    loop: "{{ node_ports.results | dict2items }}"  
+- set_stats:
+    data: 
+      kubernetes:
+        attributes: 
+          service_urls: 
+  loop: "{{ node_ports.results | dict2items }}"  
   
 # - debug:
 #     var: node_ports
