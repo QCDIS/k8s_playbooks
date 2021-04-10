@@ -8,14 +8,16 @@
       vars: 
         k8s_namespace: "{{ item }}"
       with_items:
-#         - "kubernetes-dashboard"
-#         - "default"
-        - "all-namespaces"
-        
+        - "kubernetes-dashboard"
+        - "default"
+
+    - include_vars:
+        dir: /tmp/node_ports/
+        name: node_ports
+
+
     - debug:
         var: node_ports
-        
-
         
 
 #     - name: Get the public IP address of the network.
