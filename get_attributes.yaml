@@ -4,6 +4,10 @@
   gather_facts: no
   tasks:
   
+    - file:
+        path: /tmp/node_ports/
+        state: directory
+  
     - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
