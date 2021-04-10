@@ -67,59 +67,38 @@
       ufw:
         state: enabled
           
-      - name: ssh
-        ufw:
-          rule: allow
-          port: ssh
-          proto: tcp
-          
-      - name: open api ports
-        ufw:
-          rule: allow
-          port: 8080
-          proto: tcp
-          
-      - name: open api ports
-        ufw:
-          rule: allow
-          port: 6443
-          proto: tcp
-          
-      - name: open node ports
-        ufw:
-          rule: allow
-          port: 30000-32767
-          proto: tcp
+    - name: ssh
+      ufw:
+        rule: allow
+        port: ssh
+        proto: tcp
 
-      - reboot:
+    - name: open api ports
+      ufw:
+        rule: allow
+        port: 8080
+        proto: tcp
+
+    - name: open api ports
+      ufw:
+        rule: allow
+        port: 6443
+        proto: tcp
+
+    - name: open node ports
+      ufw:
+        rule: allow
+        port: 30000-32767
+        proto: tcp
+
+    - reboot:
       
-      - name: Wait for the reboot to complete if there was a change.
-        wait_for_connection:
-          connect_timeout: 30
-          sleep: 5
-          delay: 5
-          timeout: 300
-
-#     - name: open api ports
-#       firewalld:
-#         port: 8080/tcp
-#         permanent: yes
-#         state: enabled
-#       become: yes
-
-#     - name: open api ports
-#       firewalld:
-#         port: 6443/tcp
-#         permanent: yes
-#         state: enabled
-#       become: yes
-
-#     - name: open  Nodeport
-#       firewalld:
-#         port: 30000-32767/tcp
-#         permanent: yes
-#         state: enabled
-#       become: yes
+    - name: Wait for the reboot to complete if there was a change.
+      wait_for_connection:
+        connect_timeout: 30
+        sleep: 5
+        delay: 5
+        timeout: 300
 
     - name: Check all ports are accessible
       wait_for:
