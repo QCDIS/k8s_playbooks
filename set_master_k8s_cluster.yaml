@@ -64,34 +64,40 @@
       when: kubectl_command_result.rc != 0
       
     - name: Allow everything UFW
+      become: yes
       ufw:
         state: enabled
           
     - name: ssh
+      become: yes
       ufw:
         rule: allow
         port: ssh
         proto: tcp
 
     - name: open api ports
+      become: yes
       ufw:
         rule: allow
         port: 8080
         proto: tcp
 
     - name: open api ports
+      become: yes
       ufw:
         rule: allow
         port: 6443
         proto: tcp
 
     - name: open node ports
+      become: yes
       ufw:
         rule: allow
         port: 30000-32767
         proto: tcp
 
     - reboot:
+      become: yes
       
     - name: Wait for the reboot to complete if there was a change.
       wait_for_connection:
