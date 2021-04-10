@@ -4,14 +4,17 @@
   gather_facts: no
   tasks:
   
-    - name: Get a list of services
-      k8s_info:
-        kind: Service
-        namespace: "{{ item }}"
-      register: k8s_services
+    - include:  get_node_ports.yaml
+      vars: 
+        k8s_namespace: "{{ item }}"
       with_items:
-        - "default"
-        - "kubernetes-dashboard"
+#         - "kubernetes-dashboard"
+#         - "default"
+        - "all-namespaces"
+        
+    - debug:
+        var: node_ports
+        
 
         
 
