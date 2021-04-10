@@ -12,19 +12,19 @@
         - "default"
         - "kubernetes-dashboard"
 
-    - name: "query node ports cluster names"
-      debug:
-        var: item
-      loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
-      register: node_ports
+#     - name: "query node ports cluster names"
+#       debug:
+#         var: item
+#       loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
+#       register: node_ports
 
 
-    - set_stats:
-        data: 
-          kubernetes:
-            attributes: 
-              service_urls: "{{item}}"
-      loop: "{{ node_ports.results }}"  
+#     - set_stats:
+#         data: 
+#           kubernetes:
+#             attributes: 
+#               service_urls: "{{item}}"
+#       loop: "{{ node_ports.results }}"  
         
 
 #     - name: Get the public IP address of the network.
