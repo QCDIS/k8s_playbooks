@@ -8,8 +8,8 @@
   debug:
     var: item
   loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
-  register: node_ports_"{{ k8s_namespace }}"
+  register: node_ports
   
-- debug:
-    var: node_ports_{{ k8s_namespace }}
+- local_action: copy content={{ node_ports }} dest=/tmp/node_ports_"{{ k8s_namespace }}".json
+  
    
