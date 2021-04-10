@@ -1,7 +1,6 @@
 ---
 - hosts: master
   gather_facts: no
-  service_urls: []
   tasks:
   
     - include:  get_node_ports.yaml
