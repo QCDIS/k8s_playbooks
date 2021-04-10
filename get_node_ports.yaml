@@ -9,10 +9,6 @@
     var: item
   loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
   register: node_ports
-  
-- file:
-    path: /tmp/node_ports/
-    state: directory
 
 - copy:
     content: "{{ node_ports }}"
