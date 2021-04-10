@@ -10,6 +10,14 @@
   loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
   register: node_ports
   
+  
+  - set_stats:
+      data: 
+        kubernetes:
+          attributes: 
+            service_urls: 
+    loop: "{{ node_ports.results | dict2items }}"  
+  
 # - debug:
 #     var: node_ports
    
