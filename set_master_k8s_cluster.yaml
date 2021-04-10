@@ -113,7 +113,7 @@
         state: started         # Port should be open
         delay: 3               # No wait before first check (sec)
         timeout: 30             # Stop checking after timeout (sec)
-#       ignore_errors: yes
+      ignore_errors: yes
       with_items:
         - 6443
         - 30000
