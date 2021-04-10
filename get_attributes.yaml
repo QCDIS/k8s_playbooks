@@ -7,8 +7,9 @@
       vars: 
         k8s_namespace: "{{ item }}"
       with_items:
-        - "kubernetes-dashboard"
-        - "default"
+#         - "kubernetes-dashboard"
+#         - "default"
+        - "all-namespaces"
         
     - debug:
         var: node_ports
