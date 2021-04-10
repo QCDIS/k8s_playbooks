@@ -4,8 +4,8 @@
   connection: local
   tasks:
     - file:
-      path: node_ports
-      state: directory
+        path: node_ports
+        state: directory
 ---
 - hosts: master
   gather_facts: no
