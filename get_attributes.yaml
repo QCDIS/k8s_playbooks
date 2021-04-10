@@ -1,6 +1,7 @@
 ---
 - hosts: master
   gather_facts: no
+  service_urls: []
   tasks:
   
     - include:  get_node_ports.yaml
@@ -22,15 +23,24 @@
       delay: 10
       
 
-    - set_fact:
-        attributes: 
-          service_urls: 
-          - "https://{{public_ip['ip']}}:{{item}}"
-      loop: "{{ node_ports | dict2items }}"          
+    - set_stats:
+        data: 
+          kubernetes:
+            attributes: 
+              service_urls: 
+                - "https://{{public_ip['json']['ip']}}:{{item}}"
+      loop: "{{ node_ports | dict2items }}"  
+      
+
+#     - set_fact:
+#         attributes: 
+#           service_urls: 
+#           - "https://{{public_ip['json']['ip']}}:{{item}}"
+#       loop: "{{ node_ports | dict2items }}"          
           
-    - name: Display the Dictionaries
-      debug: 
-        var: attributes
+#     - name: Display the Dictionaries
+#       debug: 
+#         var: attributes
       
 
 #     - debug:
