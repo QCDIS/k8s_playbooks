@@ -7,7 +7,7 @@
       vars: 
         k8s_namespace: "{{ item }}"
       with_items:
-#         - "kubernetes-dashboard"
+        - "kubernetes-dashboard"
         - "default"
         
 
