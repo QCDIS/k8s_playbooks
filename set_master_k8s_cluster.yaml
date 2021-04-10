@@ -66,6 +66,7 @@
       - name: Allow everything UFW
         ufw:
           state: enabled
+          
       - name: ssh
         ufw:
           rule: allow
@@ -90,7 +91,14 @@
           port: 30000-32767
           proto: tcp
 
-    
+      - reboot:
+      
+      - name: Wait for the reboot to complete if there was a change.
+        wait_for_connection:
+          connect_timeout: 30
+          sleep: 5
+          delay: 5
+          timeout: 300
 
 #     - name: open api ports
 #       firewalld:
