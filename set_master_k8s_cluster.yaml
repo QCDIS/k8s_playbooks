@@ -93,7 +93,7 @@
       become: yes
       ufw:
         rule: allow
-        port: 30000-32767
+        port: 30000:32767
         proto: tcp
 
     - reboot:
