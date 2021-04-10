@@ -3,16 +3,28 @@
   gather_facts: no
   tasks:
   
-    - include:  get_node_ports.yaml
-      vars: 
-        k8s_namespace: "{{ item }}"
+    - name: Get a list of services
+      k8s_info:
+        kind: Service
+        namespace: "{{ item }}"
+      register: k8s_services
       with_items:
-#         - "kubernetes-dashboard"
-#         - "default"
-        - "all-namespaces"
-        
-    - debug:
-        var: node_ports
+        - "default"
+        - "kubernetes-dashboard"
+
+    - name: "query node ports cluster names"
+      debug:
+        var: item
+      loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
+      register: node_ports
+
+
+    - set_stats:
+        data: 
+          kubernetes:
+            attributes: 
+              service_urls: "{{item}}"
+      loop: "{{ node_ports.results }}"  
         
 
 #     - name: Get the public IP address of the network.
