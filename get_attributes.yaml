@@ -22,13 +22,13 @@
       delay: 10
       
 
-    - set_stats:
-        data: 
-          kubernetes:
-            attributes: 
-              service_urls: 
-                - "https://{{public_ip['json']['ip']}}:{{item}}"
-      loop: "{{ node_ports | dict2items }}"  
+#     - set_stats:
+#         data: 
+#           kubernetes:
+#             attributes: 
+#               service_urls: 
+#                 - "https://{{public_ip['json']['ip']}}:{{item}}"
+#       loop: "{{ node_ports | dict2items }}"  
       
 
 #     - set_fact:
@@ -42,7 +42,7 @@
 #         var: attributes
       
 
-#     - debug:
-#         var: item.value[0].item
-#       loop: "{{ node_ports | dict2items }}"
+    - debug:
+        var: item.value[0].item
+      loop: "{{ node_ports | dict2items }}"
   
