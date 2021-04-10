@@ -10,6 +10,9 @@
         - "kubernetes-dashboard"
         - "default"
         
+    - debug:
+        var: node_ports
+        
 
 #     - name: Get the public IP address of the network.
 #       uri:
