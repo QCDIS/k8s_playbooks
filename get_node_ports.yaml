@@ -16,7 +16,7 @@
       kubernetes:
         attributes: 
           service_urls: "{{item}}"
-  loop: "{{ node_ports.results.item }}"  
+  loop: "{{ node_ports.results }}"  
   
 # - debug:
 #     var: node_ports
