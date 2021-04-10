@@ -12,6 +12,6 @@
 
 - copy:
     content: "{{ node_ports }}"
-    dest: /tmp/node_ports/"{{ k8s_namespace }}".json
+    dest: /tmp/node_ports/{{ k8s_namespace }}.json
   
    
