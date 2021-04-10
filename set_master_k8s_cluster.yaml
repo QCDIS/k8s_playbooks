@@ -112,7 +112,7 @@
         port: "{{ item }}"
         state: started         # Port should be open
         delay: 3               # No wait before first check (sec)
-        timeout: 10             # Stop checking after timeout (sec)
+        timeout: 30             # Stop checking after timeout (sec)
 #       ignore_errors: yes
       with_items:
         - 6443
