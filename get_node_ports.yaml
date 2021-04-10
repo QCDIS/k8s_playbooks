@@ -11,5 +11,5 @@
   register: node_ports_"{{ k8s_namespace }}"
   
 - debug:
-    var: node_ports_"{{ k8s_namespace }}"
+    var: node_ports_{{ k8s_namespace }}
    
