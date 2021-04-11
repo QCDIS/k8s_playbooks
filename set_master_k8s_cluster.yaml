@@ -132,6 +132,8 @@
         - 6443
         - 30000
         - 32767
+        - 10250
+        - 443
         
 - hosts: master
   gather_facts: no
