@@ -46,25 +46,17 @@
 
     - shell: jq -r .url /tmp/node_ports/all_node_ports.json
       register: node_ports
-  
-      
-#     - fetch: 
-#         src: /tmp/node_ports/all_node_ports_list.json
-#         dest: node_ports/all_node_ports_list.json
-#         flat: yes
-    
-#     - include_vars:
-#         file: node_ports/all_node_ports_list.json
-#         name: node_ports
        
-    - debug:
-        var: node_ports
+
+    - include: get_dashboard_token.yaml
 
     - set_stats:
         data: 
           kubernetes:
             attributes: 
               service_urls: "{{ node_ports.stdout_lines }}" 
+              tokens: "{{ tokens }}" 
+      
       
 
 #     - set_fact:
