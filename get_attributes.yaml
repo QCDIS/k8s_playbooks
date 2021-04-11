@@ -44,18 +44,18 @@
         - "kubernetes-dashboard"
         - "default"
 
-    - shell: jq -c -r --slurp /tmp/node_ports/all_node_ports.json  > /tmp/node_ports/all_node_ports_list.json 
-    
+    - shell: jq -r .url /tmp/node_ports/all_node_ports.json
+      register: node_ports
   
       
-    - fetch: 
-        src: /tmp/node_ports/all_node_ports_list.json
-        dest: node_ports/all_node_ports_list.json
-        flat: yes
+#     - fetch: 
+#         src: /tmp/node_ports/all_node_ports_list.json
+#         dest: node_ports/all_node_ports_list.json
+#         flat: yes
     
-    - include_vars:
-        file: node_ports/all_node_ports_list.json
-        name: node_ports
+#     - include_vars:
+#         file: node_ports/all_node_ports_list.json
+#         name: node_ports
        
     - debug:
         var: node_ports
