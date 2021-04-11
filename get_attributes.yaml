@@ -60,13 +60,11 @@
     - debug:
         var: node_ports
 
-#     - set_stats:
-#         data: 
-#           kubernetes:
-#             attributes: 
-#               service_urls: "{{ service_urls + [ item ] }}"
-# #                 - "https://{{public_ip['json']['ip']}}:{{item}}"
-#       loop: "{{ node_ports.stdout_lines }}"  
+    - set_stats:
+        data: 
+          kubernetes:
+            attributes: 
+              service_urls: "{{ node_ports.stdout_lines }}" 
       
 
 #     - set_fact:
