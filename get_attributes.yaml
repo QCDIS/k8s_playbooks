@@ -3,25 +3,27 @@
   gather_facts: no
   connection: local
   tasks:
-    - file:
-        path: node_ports
-        state: directory
         
     - file:
         state: absent
         path: node_ports/
+        
+    - file:
+        path: node_ports
+        state: directory
+
 
 - hosts: master
   gather_facts: no
   tasks:
-  
-    - file:
-        path: /tmp/node_ports/
-        state: directory
-        
+          
     - file:
         state: absent
         path: /tmp/node_ports/
+        
+    - file:
+        path: /tmp/node_ports/
+        state: directory
         
     - include:  get_node_ports.yaml
       vars: 
