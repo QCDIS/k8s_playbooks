@@ -31,7 +31,7 @@
         - "default"
 
     - include_vars:
-        dir: node_ports/{{item}}.json
+        file: node_ports/{{item}}.json
         name: node_ports_{{item}}
       with_items:
         - "kubernetes-dashboard"
