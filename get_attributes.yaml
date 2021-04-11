@@ -13,9 +13,9 @@
   gather_facts: no
   tasks:
           
-#     - file:
-#         state: absent
-#         path: /tmp/node_ports/
+    - file:
+        state: absent
+        path: /tmp/node_ports/
         
     - file:
         path: /tmp/node_ports/
