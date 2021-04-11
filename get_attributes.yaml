@@ -48,8 +48,14 @@
       register: node_ports
        
     - include: get_dashboard_token.yaml
+    
+
+        
+    - set_fact:
+      dashboard_token: "{{k8s_dashboard_token.stdout | replace('token','') }}"
+       
     - debug: 
-        var: k8s_dashboard_token.stdout | replace('token:      ','')
+        var: dashboard_token
 
     - set_stats:
         data: 
