@@ -29,7 +29,7 @@
       register: node_ports
       
       
-     - debug:
+    - debug:
         var: node_ports
 
 #     - fetch:
