@@ -23,7 +23,7 @@
         - "default"
 
     - fetch:
-        src: /tmp/node_ports/{{item}}
+        src: /tmp/node_ports/{{item}}.json
         dest: node_ports
         flat: yes
       with_items:
