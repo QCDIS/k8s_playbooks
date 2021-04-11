@@ -14,6 +14,14 @@
 #     - name:
 #       debug:
 #         msg: "Join command is {{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
+
+    - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited 
+      become: yes
+      ignore_errors: yes
+      
+    - shell: iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
+      become: yes
+      ignore_errors: yes
         
                 
 - hosts: worker
