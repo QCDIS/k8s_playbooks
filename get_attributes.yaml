@@ -39,12 +39,13 @@
       retries: 6
       delay: 10
         
-    - shell: jq -c '.results[] | {"port":.item[],"address":"https://{{public_ip['json']['ip']}}"}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
+    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
       with_items:
         - "kubernetes-dashboard"
         - "default"
 
-    - shell: jq -c -r --slurp /tmp/node_ports/all_node_ports.json  > /tmp/node_ports/all_node_ports_list.json 
+    - shell: tr -d '\n' < /tmp/node_ports/all_node_ports.json && jq -c -r --slurp /tmp/node_ports/all_node_ports.json  > /tmp/node_ports/all_node_ports_list.json 
+    
   
       
     - fetch: 
