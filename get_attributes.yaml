@@ -65,24 +65,9 @@
         data: 
           kubernetes:
             attributes: 
+              config: "{{kube_config}}"
               service_urls: "{{ node_ports.stdout_lines }}" 
               tokens: 
                 - "{{ credential }}" 
       
       
-
-#     - set_fact:
-#         attributes: 
-#           service_urls: 
-#           - "https://{{public_ip['json']['ip']}}:{{item}}"
-#       loop: "{{ node_ports | dict2items }}"          
-          
-#     - name: Display the Dictionaries
-#       debug: 
-#         var: attributes
-      
-
-#     - debug:
-#         var: item.value[0].item
-#       loop: "{{ node_ports | dict2items }}"
-  
