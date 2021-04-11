@@ -1,4 +1,4 @@
-
+---
 - hosts: localhost
   gather_facts: no
   connection: local
@@ -6,7 +6,7 @@
     - file:
         path: node_ports
         state: directory
----
+
 - hosts: master
   gather_facts: no
   tasks:
