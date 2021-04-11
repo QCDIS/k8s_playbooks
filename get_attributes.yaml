@@ -39,28 +39,20 @@
       retries: 6
       delay: 10
         
-    - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
+#     - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
+    - shell: jq -c '.results[] | {"port": .item[],"address":"https://{{public_ip['json']['ip']}}"}' 
       with_items:
         - "kubernetes-dashboard"
         - "default"
+      register: node_ports
       
 
       
-    - shell: cat  /tmp/node_ports/all_node_ports_array
-      register: node_ports
+#     - shell: cat  /tmp/node_ports/all_node_ports_array
+#       register: node_ports
        
     - debug:
-        var: node_ports.stdout_lines
-        
-    - set_fact:
-        service_urls: []
-        
-    - set_fact:
-        host_groups: "{{ (host_groups | default([])) + [item.key] }}"
-      with_dict: "{{ groups }}"
-
-    - debug:
-        var: host_groups
+        var: node_ports
 
 #     - set_stats:
 #         data: 
