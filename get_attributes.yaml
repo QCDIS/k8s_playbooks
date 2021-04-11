@@ -26,25 +26,24 @@
         state: absent
         path: /tmp/node_ports/all_node_ports.json
         
-    - shell: jq -r '.results[] | {node_port:.item[]}' /tmp/node_ports/{{item}}.json | tr -d '\n' >> /tmp/node_ports/all_node_ports.json
+    - shell: jq -r '.results[] | {node_port:.item[]}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json
       with_items:
         - "kubernetes-dashboard"
         - "default"
       
-    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json | tr -d '\n' > /tmp/node_ports/all_node_ports_array.json
-      register: node_ports 
+    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json > /tmp/node_ports/all_node_ports_array.json
 
-    - fetch:
-        src: /tmp/node_ports/all_node_ports_array.json
-        dest: node_ports/all_node_ports_array.json
-        flat: yes
+#     - fetch:
+#         src: /tmp/node_ports/all_node_ports_array.json
+#         dest: node_ports/all_node_ports_array.json
+#         flat: yes
 
-    - include_vars:
-        file: node_ports/all_node_ports_array.json
-        name: node_ports
+#     - include_vars:
+#         file: node_ports/all_node_ports_array.json
+#         name: node_ports
       
-    - debug:
-        var: node_ports
+#     - debug:
+#         var: node_ports
         
 
 #     - name: Get the public IP address of the network.
