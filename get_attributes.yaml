@@ -22,17 +22,19 @@
         - "kubernetes-dashboard"
         - "default"
         
-    - shell: jq -r .results[].item[] /tmp/node_ports/{{item}}.json
+    - shell: jq '.results[] | {node_port: .item[]}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json
       with_items:
         - "kubernetes-dashboard"
         - "default"
+      
+    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json
       register: node_ports
       
       
     - debug:
-        var: item.stdout
+        var: item
       with_items:
-        - "{{node_ports.results}}"
+        - "{{node_ports}}"
 
 #     - fetch:
 #         src: /tmp/node_ports/{{item}}.json
