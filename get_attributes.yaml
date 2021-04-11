@@ -6,6 +6,10 @@
     - file:
         path: node_ports
         state: directory
+        
+    - file:
+        state: absent
+        path: node_ports/
 
 - hosts: master
   gather_facts: no
@@ -14,17 +18,17 @@
     - file:
         path: /tmp/node_ports/
         state: directory
-  
+        
+    - file:
+        state: absent
+        path: /tmp/node_ports/
+        
     - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
       with_items:
         - "kubernetes-dashboard"
         - "default"
-        
-    - file:
-        state: absent
-        path: /tmp/node_ports/all_node_ports.json
         
     - shell: jq -r '.results[] | {node_port:.item[]}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json
       with_items:
