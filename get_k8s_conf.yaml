@@ -3,6 +3,7 @@
 - fetch: 
     src: ${HOME}/.kube/config
     dest: kube_config.yaml
+    flat: yes
     
 
 - include_vars:
