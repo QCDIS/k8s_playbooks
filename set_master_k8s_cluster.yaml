@@ -120,9 +120,11 @@
       
     - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited 
       become: yes
+      ignore_errors: yes
       
     - shell: iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
       become: yes
+      ignore_errors: yes
       
     - reboot:
       become: yes
