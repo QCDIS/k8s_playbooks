@@ -22,7 +22,7 @@
         - "kubernetes-dashboard"
         - "default"
         
-    - shell: jq .results[].item[] /tmp/node_ports/{{item}}.json
+    - shell: jq -r .results[].item[] /tmp/node_ports/{{item}}.json
       with_items:
         - "kubernetes-dashboard"
         - "default"
@@ -30,7 +30,7 @@
       
       
     - debug:
-        var: node_ports
+        var: node_ports.stdout
 
 #     - fetch:
 #         src: /tmp/node_ports/{{item}}.json
