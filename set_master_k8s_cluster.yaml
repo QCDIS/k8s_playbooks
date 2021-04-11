@@ -118,6 +118,9 @@
     - shell: yes y | ufw enable
       become: yes
       
+    - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited && iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
+      become: yes
+      
     - reboot:
       become: yes
       
