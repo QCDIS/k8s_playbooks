@@ -55,8 +55,11 @@
           token_type: k8s_dashboard_token
           token: "{{k8s_dashboard_token.stdout | replace('token:      ','') }}"
        
-    - debug: 
-        var: dashboard_token
+       
+   - include: get_k8s_conf.yaml
+   
+   - debug:
+      var: kube_config
 
     - set_stats:
         data: 
