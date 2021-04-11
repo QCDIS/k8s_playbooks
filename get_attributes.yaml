@@ -49,7 +49,7 @@
        
     - include: get_dashboard_token.yaml
     - debug: 
-        var: k8s_dashboard_token.stdout
+        var: k8s_dashboard_token.stdout | replace('token:      ','')
 
     - set_stats:
         data: 
