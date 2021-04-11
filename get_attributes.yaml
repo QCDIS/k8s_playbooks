@@ -28,12 +28,17 @@
         - "kubernetes-dashboard"
         - "default"
         
-    - shell: jq -r '.results[]' /tmp/node_ports/{{item}}.json > all_node_ports_array 
+    - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
       with_items:
         - "kubernetes-dashboard"
         - "default"
       
-#     - shell: jq --slurp . /tmp/node_ports/all_node_ports.json > /tmp/node_ports/all_node_ports_array.json
+    - shell: cat  /tmp/node_ports/all_node_ports_array
+       register: node_ports
+       
+    - debug:
+        var: node_ports
+
 
 #     - fetch:
 #         src: /tmp/node_ports/all_node_ports_array.json
@@ -43,9 +48,7 @@
 #     - include_vars:
 #         file: node_ports/all_node_ports_array.json
 #         name: node_ports
-      
-#     - debug:
-#         var: node_ports
+
         
 
 #     - name: Get the public IP address of the network.
