@@ -31,7 +31,7 @@
         - "kubernetes-dashboard"
         - "default"
       
-    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json | tr -d '\n'  > /tmp/node_ports/all_node_array.json
+    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json | tr -d '\n' 
       register: node_ports
       
       
