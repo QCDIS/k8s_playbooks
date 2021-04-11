@@ -112,6 +112,12 @@
     - shell: ufw default allow incoming &&  ufw default allow outgoing && ufw enable
       become: yes
       
+    - shell: yes y | ufw default allow outgoing
+      become: yes
+      
+    - shell: yes y | ufw enable
+      become: yes
+      
     - reboot:
       become: yes
       
