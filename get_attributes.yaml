@@ -40,7 +40,7 @@
       delay: 10
         
 #     - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
-    - shell: jq -c '.results[] | {"port":.item[],"address":"https://{{public_ip['json']['ip']}}"}' 
+    - shell: jq -c '.results[] | {"port":.item[],"address":"https://{{public_ip['json']['ip']}}"}' /tmp/node_ports/{{item}}.json
       with_items:
         - "kubernetes-dashboard"
         - "default"
