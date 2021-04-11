@@ -30,7 +30,7 @@
       
       
     - debug:
-        var: item
+        var: item.stdout
       with_items:
         - "{{node_ports.results}}"
 
