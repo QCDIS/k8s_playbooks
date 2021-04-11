@@ -63,38 +63,52 @@
       shell: kubectl taint nodes --all node-role.kubernetes.io/master-  
       when: kubectl_command_result.rc != 0
       
-    - name: Allow everything UFW
+    - name: enable UFW
       become: yes
       ufw:
         state: enabled
+        
+    - ufw:
+      become: yes
+        state: enabled
+        policy: allow
           
-    - name: ssh
-      become: yes
-      ufw:
-        rule: allow
-        port: ssh
-        proto: tcp
+#     - name: ssh
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: ssh
+#         proto: tcp
 
-    - name: open api ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 8080
-        proto: tcp
+#     - name: open api ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 8080
+#         proto: tcp
 
-    - name: open api ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 6443
-        proto: tcp
+#     - name: open api ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 6443
+#         proto: tcp
 
-    - name: open node ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 30000:32767
-        proto: tcp
+#     - name: open node ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 30000:32767
+#         proto: tcp
+
+
+#     - name: open node ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 10250
+#         proto: tcp
+        
 
     - reboot:
       become: yes
