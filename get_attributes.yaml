@@ -52,7 +52,7 @@
 
         
     - set_fact:
-      dashboard_token: "{{k8s_dashboard_token.stdout | replace('token','') }}"
+        dashboard_token: "{{k8s_dashboard_token.stdout | replace('token','') }}"
        
     - debug: 
         var: dashboard_token
