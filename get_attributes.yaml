@@ -54,14 +54,21 @@
         
     - set_fact:
         service_urls: []
+        
+    - set_fact:
+        host_groups: "{{ (host_groups | default([])) + [item.key] }}"
+      with_dict: "{{ groups }}"
 
-    - set_stats:
-        data: 
-          kubernetes:
-            attributes: 
-              service_urls: "{{ service_urls + [ item ] }}"
-#                 - "https://{{public_ip['json']['ip']}}:{{item}}"
-      loop: "{{ node_ports.stdout_lines }}"  
+    - debug:
+        var: host_groups
+
+#     - set_stats:
+#         data: 
+#           kubernetes:
+#             attributes: 
+#               service_urls: "{{ service_urls + [ item ] }}"
+# #                 - "https://{{public_ip['json']['ip']}}:{{item}}"
+#       loop: "{{ node_ports.stdout_lines }}"  
       
 
 #     - set_fact:
