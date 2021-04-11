@@ -56,9 +56,9 @@
           token: "{{k8s_dashboard_token.stdout | replace('token:      ','') }}"
        
        
-   - include: get_k8s_conf.yaml
+    - include: get_k8s_conf.yaml
    
-   - debug:
+    - debug:
       var: kube_config
 
     - set_stats:
