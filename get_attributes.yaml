@@ -1,12 +1,12 @@
 ---
-# - hosts: localhost
-#   gather_facts: no
-#   connection: local
-#   tasks:
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
                 
-#     - file:
-#         path: node_ports
-#         state: directory
+    - file:
+        path: node_ports
+        state: directory
 
 
 - hosts: master
@@ -39,17 +39,19 @@
       retries: 6
       delay: 10
         
-#     - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
-    - shell: jq -c '.results[] | {"port":.item[],"address":"https://{{public_ip['json']['ip']}}"}' /tmp/node_ports/{{item}}.json
+    - shell: jq -c '.results[] | {"port":.item[],"address":"https://{{public_ip['json']['ip']}}"}' /tmp/node_ports/{{item}}.json | jq -c -r --slurp >> /tmp/node_ports/all_node_ports.json 
       with_items:
         - "kubernetes-dashboard"
         - "default"
-      register: node_ports
       
-
-      
-#     - shell: cat  /tmp/node_ports/all_node_ports_array
-#       register: node_ports
+    - fetch: 
+        src: /tmp/node_ports/all_node_ports.json
+        dest: node_ports/all_node_ports.json
+        flat: yes
+    
+    - include_vars:
+        file: node_ports/all_node_ports.json
+        name: node_ports
        
     - debug:
         var: node_ports
