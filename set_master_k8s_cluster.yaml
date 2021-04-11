@@ -109,14 +109,14 @@
         port: 10250
         proto: tcp
         
-    - shell: yes y | ufw default allow incoming 
-      become: yes
+#     - shell: yes y | ufw default allow incoming 
+#       become: yes
       
-    - shell: yes y | ufw default allow outgoing
-      become: yes
+#     - shell: yes y | ufw default allow outgoing
+#       become: yes
       
-    - shell: yes y | ufw enable
-      become: yes
+#     - shell: yes y | ufw enable
+#       become: yes
       
     - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited && iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
       become: yes
