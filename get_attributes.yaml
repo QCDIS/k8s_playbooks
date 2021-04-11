@@ -30,7 +30,9 @@
       
       
     - debug:
-        var: node_ports.stdout
+        var: item
+      with_items:
+        - {{node_ports.results}}
 
 #     - fetch:
 #         src: /tmp/node_ports/{{item}}.json
