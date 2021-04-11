@@ -53,7 +53,7 @@
         var: node_ports.stdout_lines
         
     - set_fact:
-	      service_urls: []
+      	service_urls: []
 
     - set_stats:
         data: 
