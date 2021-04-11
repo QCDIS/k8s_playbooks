@@ -28,17 +28,6 @@
         - "kubernetes-dashboard"
         - "default"
         
-    - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
-      with_items:
-        - "kubernetes-dashboard"
-        - "default"
-      
-    - shell: cat  /tmp/node_ports/all_node_ports_array
-      register: node_ports
-       
-    - debug:
-        var: node_ports.stdout_lines
-        
 
     - name: Get the public IP address of the network.
       uri:
@@ -49,14 +38,29 @@
       until: public_ip.status == 200
       retries: 6
       delay: 10
+        
+    - shell: jq -r '.results[].item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports_array 
+      with_items:
+        - "kubernetes-dashboard"
+        - "default"
       
+
+      
+    - shell: cat  /tmp/node_ports/all_node_ports_array
+      register: node_ports
+       
+    - debug:
+        var: node_ports.stdout_lines
+        
+    - set_fact:
+	      service_urls: []
 
     - set_stats:
         data: 
           kubernetes:
             attributes: 
-              service_urls: 
-                - "https://{{public_ip['json']['ip']}}:{{item}}"
+              service_urls: "{{ service_urls + [ item ] }}"
+#                 - "https://{{public_ip['json']['ip']}}:{{item}}"
       loop: "{{ node_ports.stdout_lines }}"  
       
 
