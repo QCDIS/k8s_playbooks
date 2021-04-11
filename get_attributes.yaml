@@ -21,28 +21,38 @@
       with_items:
         - "kubernetes-dashboard"
         - "default"
-
-    - fetch:
-        src: /tmp/node_ports/{{item}}.json
-        dest: node_ports/{{item}}.json
-        flat: yes
+        
+    - shell: jq .results[].item[] /tmp/node_ports/{{item}}.json
       with_items:
         - "kubernetes-dashboard"
         - "default"
+      register: node_ports
+      
+      
+     - debug:
+        var: node_ports
 
-    - include_vars:
-        file: node_ports/{{item}}.json
-        name: node_ports_{{item}}
-      with_items:
-        - "kubernetes-dashboard"
-        - "default"
+#     - fetch:
+#         src: /tmp/node_ports/{{item}}.json
+#         dest: node_ports/{{item}}.json
+#         flat: yes
+#       with_items:
+#         - "kubernetes-dashboard"
+#         - "default"
+
+#     - include_vars:
+#         file: node_ports/{{item}}.json
+#         name: node_ports_{{item}}
+#       with_items:
+#         - "kubernetes-dashboard"
+#         - "default"
 
 
-    - debug:
-        var: node_ports_{{item}}
-      with_items:
-        - "kubernetes-dashboard"
-        - "default"
+#     - debug:
+#         var: node_ports_{{item}}
+#       with_items:
+#         - "kubernetes-dashboard"
+#         - "default"
         
 
 #     - name: Get the public IP address of the network.
