@@ -1,25 +1,21 @@
 ---
-- hosts: localhost
-  gather_facts: no
-  connection: local
-  tasks:
-        
-    - file:
-        state: absent
-        path: node_ports/
-        
-    - file:
-        path: node_ports
-        state: directory
+# - hosts: localhost
+#   gather_facts: no
+#   connection: local
+#   tasks:
+                
+#     - file:
+#         path: node_ports
+#         state: directory
 
 
 - hosts: master
   gather_facts: no
   tasks:
           
-    - file:
-        state: absent
-        path: /tmp/node_ports/
+#     - file:
+#         state: absent
+#         path: /tmp/node_ports/
         
     - file:
         path: /tmp/node_ports/
@@ -32,7 +28,7 @@
         - "kubernetes-dashboard"
         - "default"
         
-    - shell: jq -r '.results[]' /tmp/node_ports/{{item}}.json
+    - shell: jq -r '.results[]' /tmp/node_ports/{{item}}.json > all_node_ports_array 
       with_items:
         - "kubernetes-dashboard"
         - "default"
