@@ -34,7 +34,7 @@
         - "default"
       
     - shell: cat  /tmp/node_ports/all_node_ports_array
-       register: node_ports
+      register: node_ports
        
     - debug:
         var: node_ports
