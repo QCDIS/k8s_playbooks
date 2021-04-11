@@ -109,7 +109,7 @@
         port: 10250
         proto: tcp
         
-    - shell: ufw default allow incoming &&  ufw default allow outgoing && ufw enable
+    - shell: yes y | ufw default allow incoming 
       become: yes
       
     - shell: yes y | ufw default allow outgoing
