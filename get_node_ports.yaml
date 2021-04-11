@@ -13,5 +13,7 @@
 - copy:
     content: "{{ node_ports }}"
     dest: /tmp/node_ports/{{ k8s_namespace }}.json
+    
+- shell: tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}.json
   
    
