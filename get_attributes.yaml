@@ -49,10 +49,11 @@
        
     - include: get_dashboard_token.yaml
     
-
         
     - set_fact:
-        dashboard_token: "{{k8s_dashboard_token.stdout | replace('token:      ','') }}"
+        credentials:
+          - token_type: k8s_dashboard_token
+              token: "{{k8s_dashboard_token.stdout | replace('token:      ','') }}"
        
     - debug: 
         var: dashboard_token
@@ -62,7 +63,7 @@
           kubernetes:
             attributes: 
               service_urls: "{{ node_ports.stdout_lines }}" 
-              tokens: "{{ k8s_dashboard_token.stdout }}" 
+              tokens: "{{ credentials }}" 
       
       
 
