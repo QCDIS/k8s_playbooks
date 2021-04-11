@@ -59,7 +59,7 @@
     - include: get_k8s_conf.yaml
    
     - debug:
-      var: kube_config
+        var: kube_config
 
     - set_stats:
         data: 
