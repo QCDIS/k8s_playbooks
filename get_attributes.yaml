@@ -1,11 +1,11 @@
 ---
-- hosts: localhost
-  gather_facts: no
-  connection: local
-  tasks:
-    - file:
-        path: node_ports
-        state: directory
+# - hosts: localhost
+#   gather_facts: no
+#   connection: local
+#   tasks:
+#     - file:
+#         path: node_ports
+#         state: directory
 
 - hosts: master
   gather_facts: no
@@ -27,7 +27,7 @@
         - "kubernetes-dashboard"
         - "default"
       
-    - shell: jq --slurp . /tmp/node_ports/all_node_ports.json
+    - shell: jq -r --slurp . /tmp/node_ports/all_node_ports.json
       register: node_ports
       
       
@@ -35,48 +35,26 @@
         var: item
       with_items:
         - "{{node_ports}}"
-
-#     - fetch:
-#         src: /tmp/node_ports/{{item}}.json
-#         dest: node_ports/{{item}}.json
-#         flat: yes
-#       with_items:
-#         - "kubernetes-dashboard"
-#         - "default"
-
-#     - include_vars:
-#         file: node_ports/{{item}}.json
-#         name: node_ports_{{item}}
-#       with_items:
-#         - "kubernetes-dashboard"
-#         - "default"
-
-
-#     - debug:
-#         var: node_ports_{{item}}
-#       with_items:
-#         - "kubernetes-dashboard"
-#         - "default"
         
 
-    - name: Get the public IP address of the network.
-      uri:
-        url: https://api.ipify.org?format=json
-        method: Get
-      changed_when: false
-      register: public_ip
-      until: public_ip.status == 200
-      retries: 6
-      delay: 10
+#     - name: Get the public IP address of the network.
+#       uri:
+#         url: https://api.ipify.org?format=json
+#         method: Get
+#       changed_when: false
+#       register: public_ip
+#       until: public_ip.status == 200
+#       retries: 6
+#       delay: 10
       
 
-    - set_stats:
-        data: 
-          kubernetes:
-            attributes: 
-              service_urls: 
-                - "https://{{public_ip['json']['ip']}}:{{item.stdout}}"
-      loop: "{{ node_ports.results }}"  
+#     - set_stats:
+#         data: 
+#           kubernetes:
+#             attributes: 
+#               service_urls: 
+#                 - "https://{{public_ip['json']['ip']}}:{{item.stdout}}"
+#       loop: "{{ node_ports.results }}"  
       
 
 #     - set_fact:
