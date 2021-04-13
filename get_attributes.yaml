@@ -64,10 +64,9 @@
     - set_stats:
         data: 
           kubernetes:
-            attributes: 
-              config: "{{kube_config}}"
-              service_urls: "{{ node_ports.stdout_lines }}" 
-              tokens: 
-                - "{{ credential }}" 
+            config: "{{kube_config}}"
+            service_urls: "{{ node_ports.stdout_lines }}" 
+            tokens: 
+              - "{{ credential }}" 
       
       
