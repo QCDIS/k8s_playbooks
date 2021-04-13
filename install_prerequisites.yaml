@@ -1,21 +1,6 @@
 - hosts: all
   become: yes
   tasks:       
-  
-
-    - apt:
-        name: python3-pip
-        update_cache: yes
-        state: latest
-    
-    - pip:
-        name:
-            - openshift==0.11.0
-            - kubernetes==11.0.0
-      register: result
-      retries: 10
-      delay: 1
-      until: result is not failed
             
     - include: ec2/ec2_mount.yaml
     - include: docker/install_docker.yaml
