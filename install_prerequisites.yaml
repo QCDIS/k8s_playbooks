@@ -2,6 +2,10 @@
   become: yes
   tasks:       
   
+    - package:
+        name: pip
+        state: present
+    
     - pip:
         name:
             - openshift==0.11.0
@@ -10,7 +14,6 @@
       retries: 10
       delay: 1
       until: result is not failed
-      ignore_errors: True
             
     - include: ec2/ec2_mount.yaml
     - include: docker/install_docker.yaml
