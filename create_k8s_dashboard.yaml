@@ -15,8 +15,8 @@
 
 
 
-    - shell: kubectl delete ns kubernetes-dashboard 
-      ignore_errors: yes
+#     - shell: kubectl delete ns kubernetes-dashboard 
+#       ignore_errors: yes
 
     - name: Create k8s_dashboard
       k8s:
