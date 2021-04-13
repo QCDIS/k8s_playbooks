@@ -50,10 +50,10 @@
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
-# - name: Update and upgrade2
-#   apt:
+- name: Update
+  apt:
 #     upgrade: yes
-#     update_cache: yes
+    update_cache: yes
 #     autoremove: yes
 
 - shell: "echo $(lsb_release -cs)"
