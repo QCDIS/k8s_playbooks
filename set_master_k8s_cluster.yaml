@@ -129,27 +129,27 @@
 #     - reboot:
 #       become: yes
       
-    - name: Wait for the reboot to complete if there was a change.
-      wait_for_connection:
-        connect_timeout: 30
-        sleep: 5
-        delay: 5
-        timeout: 300
+#     - name: Wait for the reboot to complete if there was a change.
+#       wait_for_connection:
+#         connect_timeout: 30
+#         sleep: 5
+#         delay: 5
+#         timeout: 300
 
-    - name: Check all ports are accessible
-      wait_for:
-        host:
-        port: "{{ item }}"
-        state: started         # Port should be open
-        delay: 3               # No wait before first check (sec)
-        timeout: 30             # Stop checking after timeout (sec)
-      ignore_errors: yes
-      with_items:
-        - 6443
-        - 30000
-        - 32767
-        - 10250
-        - 443
+#     - name: Check all ports are accessible
+#       wait_for:
+#         host:
+#         port: "{{ item }}"
+#         state: started         # Port should be open
+#         delay: 3               # No wait before first check (sec)
+#         timeout: 30             # Stop checking after timeout (sec)
+#       ignore_errors: yes
+#       with_items:
+#         - 6443
+#         - 30000
+#         - 32767
+#         - 10250
+#         - 443
         
 - hosts: master
   gather_facts: no
