@@ -63,51 +63,51 @@
       shell: kubectl taint nodes --all node-role.kubernetes.io/master-  
       when: kubectl_command_result.rc != 0
       
-    - name: enable UFW
-      become: yes
-      ufw:
-        state: enabled
+#     - name: enable UFW
+#       become: yes
+#       ufw:
+#         state: enabled
         
-    - ufw:
-        state: enabled
-        policy: allow
-      become: yes
+#     - ufw:
+#         state: enabled
+#         policy: allow
+#       become: yes
           
-    - name: ssh
-      become: yes
-      ufw:
-        rule: allow
-        port: ssh
-        proto: tcp
+#     - name: ssh
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: ssh
+#         proto: tcp
 
-    - name: open api ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 8080
-        proto: tcp
+#     - name: open api ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 8080
+#         proto: tcp
 
-    - name: open api ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 6443
-        proto: tcp
+#     - name: open api ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 6443
+#         proto: tcp
 
-    - name: open node ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 30000:32767
-        proto: tcp
+#     - name: open node ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 30000:32767
+#         proto: tcp
 
 
-    - name: open node ports
-      become: yes
-      ufw:
-        rule: allow
-        port: 10250
-        proto: tcp
+#     - name: open node ports
+#       become: yes
+#       ufw:
+#         rule: allow
+#         port: 10250
+#         proto: tcp
         
 #     - shell: yes y | ufw default allow incoming 
 #       become: yes
@@ -126,8 +126,8 @@
       become: yes
       ignore_errors: yes
       
-    - reboot:
-      become: yes
+#     - reboot:
+#       become: yes
       
     - name: Wait for the reboot to complete if there was a change.
       wait_for_connection:
