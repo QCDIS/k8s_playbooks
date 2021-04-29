@@ -16,6 +16,7 @@
       fetch: 
         src: ${HOME}/.kube/config 
         dest: /tmp/config        
+        flat: yes
                 
 - hosts: worker
   gather_facts: no
