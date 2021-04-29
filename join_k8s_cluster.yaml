@@ -1,6 +1,7 @@
 ---        
-- hosts: master
-  gather_facts: no
+- hosts: localhost
+  vars:
+      ansible_python_interpreter: /usr/bin/python3
   tasks:         
     - name: join cmd
       shell: kubeadm token create --print-join-command
@@ -11,10 +12,6 @@
         name:   "k8s_join_cmd_holder"
         cmd:  "{{ k8_join_cmd.stdout }}"
         
-#     - name:
-#       debug:
-#         msg: "Join command is {{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-
     - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited 
       become: yes
       ignore_errors: yes
@@ -23,62 +20,41 @@
       become: yes
       ignore_errors: yes
         
+- hosts: all
+  tasks:
+  
+     - name: Fetch the conf from master
+       run_once: yes
+       fetch: 
+        src: ${HOME}/.kube/config 
+        dest: /tmp/config
+       when: "{{ inventory_hostname == 'master' }}"
+       
+    - file:
+        path: ~/.kube
+        state: directory
+      when: "{{ inventory_hostname == 'worker' }}"
+
+     - name: Copy conf to worker
+       copy: 
+        src: /tmp/config 
+        dest: ${HOME}/.kube/config 
+       when: "{{ inventory_hostname == 'worker' }}"
+       
                 
 - hosts: worker
   gather_facts: no
   tasks:
-  
-    - name: check if in cluster
-      uri:
-        url: http://localhost:10248/healthz
-      register: url_command_result
-      ignore_errors: True
+    
+    - shell: kubectl get nodes -o json #> /tmp/k8s_nods.json
+      register: k8s_nods
+      
+#     - fetch: 
+#         src: ${HOME}/.kube/config 
+#         dest: /tmp/config
        
-#     - name: print kubectl cluster return code
-#       debug:
-#         msg: "error message : {{url_command_result.status}}"   
-
-#     - name: print K8S_TOKEN
-#       debug:
-#         msg: "[Worker] K8S_TOKEN_HOLDER K8S token is {{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-#       when: url_command_result.status != 200
+    - include_tasks: join_k8s_cluster_task.yaml
       
-      
-    - name: disable swap
-      become: yes
-      shell: swapoff -a    
-      when: url_command_result.status != 200
-      
-      
-    - name: Add the br_netfilter module
-      become: yes    
-      modprobe:
-        name: br_netfilter
-        state: present      
-
-        
-        
-    - name: update sysctl param
-      become: yes
-      sysctl:
-        name: "{{ item }}"
-        value: 1
-        state: present
-        reload: yes
-      with_items:
-        - net.bridge.bridge-nf-call-ip6tables
-        - net.ipv4.ip_forward
-        
-    - name: kubeadm reset -f
-      shell: kubeadm reset -f
-      become: yes     
-      ignore_errors: True
-        
-    - name: join
-      shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-      become: yes
-      when: url_command_result.status != 200
-        
         
 # - hosts: master
 #   tasks: 
