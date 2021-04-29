@@ -86,7 +86,7 @@
       register: k8s_nodes_output
       
     - debug: 
-        var: k8s_nodes_output
+        var: k8s_nodes_output.stdout_lines | length
         
     - debug: 
         var: "{{ groups['all'] | length }}"
