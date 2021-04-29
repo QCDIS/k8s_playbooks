@@ -15,7 +15,7 @@
     - name: Fetch the conf from master
       fetch: 
         src: ${HOME}/.kube/config
-        dest: /tmp/config    
+        dest: /tmp/    
         flat: yes
                 
 - hosts: worker
