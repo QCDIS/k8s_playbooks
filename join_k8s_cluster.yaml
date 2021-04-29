@@ -100,13 +100,19 @@
       become: yes
       when: url_command_result.status != 200
       
-    - shell: kubectl get nodes -o json | jq -rc . > /tmp/k8s_output_nodes
+    - shell: kubectl get nodes -o json | jq -rc .
+      register: k8s_nodes_output
+#       until: k8s_nodes_output == "READY"
+#       retries: 10
+#       delay: 1
     
+    - debug: 
+        var: k8s_nodes_output
     
-    - fetch: 
-        src: /tmp/k8s_output_nodes
-        dest: /tmp/k8s_output_nodes
-        flat: yes
+#     - fetch: 
+#         src: /tmp/k8s_output_nodes
+#         dest: /tmp/k8s_output_nodes
+#         flat: yes
         
 
 #     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
