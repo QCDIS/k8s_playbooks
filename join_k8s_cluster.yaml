@@ -30,11 +30,11 @@
         dest: /tmp/config
        when: "{{ inventory_hostname == 'master' }}"
        
-    - file:
+     - file:
         path: ~/.kube
         state: directory
       when: "{{ inventory_hostname == 'worker' }}"
-
+      
      - name: Copy conf to worker
        copy: 
         src: /tmp/config 
