@@ -70,11 +70,11 @@
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
       when: url_command_result.status != 200  
-      
+    
     - include_tasks: check_nodes.yaml
-      until: groups['all'] | length | int - 1 != k8s_nodes_output.stdout_lines | length
-      retries: 10
-      delay: 1
+        retries: 10
+        delay: 1
+        until: groups['all'] | length | int - 1 != k8s_nodes_output.stdout_lines | length
       
       
 #     - systemd:
