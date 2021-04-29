@@ -20,10 +20,10 @@
 - hosts: worker
   gather_facts: no
   tasks:
-
+  
     - file:
-      path: ~/.kube
-      state: directory
+        path: ~/.kube
+        state: directory
      
     - name: Copy conf to worker
       copy: 
