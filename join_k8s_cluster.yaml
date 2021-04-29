@@ -12,26 +12,26 @@
         cmd:  "{{ k8_join_cmd.stdout }}"
         
         
-- hosts: all
-  tasks:
+# - hosts: all
+#   tasks:
   
-     - name: Fetch the conf from master
-       run_once: yes
-       fetch: 
-        src: ${HOME}/.kube/config 
-        dest: /tmp/config
-       when: "{{ inventory_hostname == 'master' }}"
+#      - name: Fetch the conf from master
+#        run_once: yes
+#        fetch: 
+#         src: ${HOME}/.kube/config 
+#         dest: /tmp/config
+#        when: "{{ inventory_hostname == 'master' }}"
        
-     - file:
-        path: ~/.kube
-        state: directory
-       when: "{{ inventory_hostname == 'worker' }}"
+#      - file:
+#         path: ~/.kube
+#         state: directory
+#        when: "{{ inventory_hostname == 'worker' }}"
       
-     - name: Copy conf to worker
-       copy: 
-        src: /tmp/config 
-        dest: ${HOME}/.kube/config 
-       when: "{{ inventory_hostname == 'worker' }}"
+#      - name: Copy conf to worker
+#        copy: 
+#         src: /tmp/config 
+#         dest: ${HOME}/.kube/config 
+#        when: "{{ inventory_hostname == 'worker' }}"
         
                 
 - hosts: worker
