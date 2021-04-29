@@ -1,0 +1,11 @@
+  - shell: kubectl get nodes -o json | jq -rc . > /tmp/k8s_output_nodes
+
+
+  - fetch: 
+      src: /tmp/k8s_output_nodes
+      dest: /tmp/k8s_output_nodes
+      flat: yes
+
+
+  - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
+    register: k8s_nodes_output
