@@ -71,7 +71,11 @@
       become: yes
       when: url_command_result.status != 200  
     
-    - include_tasks: check_nodes.yaml      
+    - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
+      register: k8s_nodes_output
+      retries: 10
+      delay: 1
+      until: groups['all'] | length | int - 1 != k8s_nodes_output.stdout_lines | length
       
 #     - systemd:
 #         state: restarted
