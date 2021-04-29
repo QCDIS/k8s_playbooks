@@ -57,7 +57,7 @@
 #         src: ${HOME}/.kube/config 
 #         dest: /tmp/config
        
-    - include_tasks: join_k8s_cluster_task.yaml
+#     - include_tasks: join_k8s_cluster_task.yaml
       
         
 # - hosts: master
