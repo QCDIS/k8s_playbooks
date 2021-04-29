@@ -84,6 +84,9 @@
 
     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
       register: k8s_nodes_output
+      
+    - debug: 
+        var: k8s_nodes_output
         
     - debug: 
         var: "{{ groups['all'] | length }}"
