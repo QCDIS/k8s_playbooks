@@ -15,7 +15,7 @@
     - name: Fetch the conf from master
       fetch: 
         src: ${HOME}/.kube/config
-        dest: /tmp/    
+        dest: /tmp/k8s_config
         flat: yes
                 
 - hosts: worker
@@ -28,7 +28,7 @@
      
     - name: Copy conf to worker
       copy: 
-        src: /tmp/config 
+        src: /tmp/k8s_config
         dest: ${HOME}/.kube/config
 
   
