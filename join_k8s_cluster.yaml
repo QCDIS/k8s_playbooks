@@ -90,6 +90,7 @@
         
     - debug: 
         var: "{{ groups['all'] | length }}"
+      when: groups['all'] | length | int - 1 == k8s_nodes_output.stdout_lines | length
       
 #     - systemd:
 #         state: restarted
