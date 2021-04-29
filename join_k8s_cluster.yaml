@@ -14,8 +14,8 @@
         
     - name: Fetch the conf from master
       fetch: 
-        src: ${HOME}/.kube/config 
-        dest: /tmp/config        
+        src: ${HOME}/.kube/config
+        dest: /tmp/config    
         flat: yes
                 
 - hosts: worker
@@ -29,7 +29,7 @@
     - name: Copy conf to worker
       copy: 
         src: /tmp/config 
-        dest: ${HOME}/.kube/config 
+        dest: ${HOME}/.kube/config
 
   
     - name: check if in cluster
