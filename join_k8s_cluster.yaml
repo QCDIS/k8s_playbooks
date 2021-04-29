@@ -71,3 +71,18 @@
       become: yes
       when: url_command_result.status != 200
       
+    - shell: kubectl get nodes -o json | jq -rc . > /tmp/k8s_output_nodes
+    
+    
+    - fetch: 
+        src: /tmp/k8s_output_nodes
+        dest: /tmp/k8s_output_nodes
+        flat: yes
+        
+    - include_vars:
+        file: /tmp/k8s_output_nodes
+        name: k8s_output_nodes
+    
+    - debug:
+        var: k8s_output_nodes
+      
