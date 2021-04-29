@@ -33,7 +33,7 @@
      - file:
         path: ~/.kube
         state: directory
-      when: "{{ inventory_hostname == 'worker' }}"
+       when: "{{ inventory_hostname == 'worker' }}"
       
      - name: Copy conf to worker
        copy: 
