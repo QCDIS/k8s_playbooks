@@ -79,10 +79,9 @@
         dest: /tmp/k8s_output_nodes
         flat: yes
         
-    - include_vars:
-        file: /tmp/k8s_output_nodes
-        name: k8s_output_nodes
-    
-    - debug:
-        var: k8s_output_nodes
+
+    - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
+        
+    - debug: 
+        var: "{{ groups['all'] | length }}"
       
