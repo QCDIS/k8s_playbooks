@@ -26,9 +26,9 @@
       state: directory
      
     - name: Copy conf to worker
-     copy: 
-      src: /tmp/config 
-      dest: ${HOME}/.kube/config 
+      copy: 
+        src: /tmp/config 
+        dest: ${HOME}/.kube/config 
 
   
     - name: check if in cluster
