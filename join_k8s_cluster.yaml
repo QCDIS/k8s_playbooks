@@ -69,10 +69,9 @@
     - name: join
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
-      when: url_command_result.status != 200
+      when: url_command_result.status != 200  
       
-    - ansible.builtin.systemd:
-      become: yes
+    - systemd:
         state: restarted
         daemon_reload: yes
         name: "{{item}}"
@@ -80,7 +79,8 @@
         - "docker"
         - "kubelet"
       when: url_command_result.status != 200
-      
+      become: yes
+     
       
     - reboot:
       when: url_command_result.status != 200
