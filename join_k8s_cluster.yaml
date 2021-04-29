@@ -4,6 +4,7 @@
       ansible_python_interpreter: /usr/bin/python3
   tasks:         
     - name: join cmd
+      become: yes
       shell: kubeadm token create --print-join-command
       register: k8_join_cmd  
       
