@@ -71,11 +71,7 @@
       become: yes
       when: url_command_result.status != 200  
     
-    - include_tasks: check_nodes.yaml
-        retries: 10
-        delay: 1
-        until: groups['all'] | length | int - 1 != k8s_nodes_output.stdout_lines | length
-      
+    - include_tasks: check_nodes.yaml      
       
 #     - systemd:
 #         state: restarted
