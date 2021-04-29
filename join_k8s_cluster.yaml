@@ -43,15 +43,15 @@
        when: "{{ inventory_hostname == 'worker' }}"
        
                 
-- hosts: worker
-  gather_facts: no
-  tasks:
+# - hosts: worker
+#   gather_facts: no
+#   tasks:
     
-    - shell: kubectl get nodes -o json #> /tmp/k8s_nods.json
-      register: k8s_nods
+#     - shell: kubectl get nodes -o json #> /tmp/k8s_nods.json
+#       register: k8s_nods
       
-    - debug:
-        var: k8s_nods
+#     - debug:
+#         var: k8s_nods
       
 #     - fetch: 
 #         src: ${HOME}/.kube/config 
