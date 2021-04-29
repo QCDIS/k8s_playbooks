@@ -11,32 +11,27 @@
         name:   "k8s_join_cmd_holder"
         cmd:  "{{ k8_join_cmd.stdout }}"
         
-        
-# - hosts: all
-#   tasks:
-  
-#      - name: Fetch the conf from master
-#        run_once: yes
-#        fetch: 
-#         src: ${HOME}/.kube/config 
-#         dest: /tmp/config
-#        when: "{{ inventory_hostname == 'master' }}"
-       
-#      - file:
-#         path: ~/.kube
-#         state: directory
-#        when: "{{ inventory_hostname == 'worker' }}"
-      
-#      - name: Copy conf to worker
-#        copy: 
-#         src: /tmp/config 
-#         dest: ${HOME}/.kube/config 
-#        when: "{{ inventory_hostname == 'worker' }}"
-        
+     - name: Fetch the conf from master
+       run_once: yes
+       fetch: 
+        src: ${HOME}/.kube/config 
+        dest: /tmp/config        
                 
 - hosts: worker
   gather_facts: no
   tasks:
+
+    - file:
+      path: ~/.kube
+      state: directory
+     when: "{{ inventory_hostname == 'worker' }}"
+     
+    - name: Copy conf to worker
+     copy: 
+      src: /tmp/config 
+      dest: ${HOME}/.kube/config 
+     when: "{{ inventory_hostname == 'worker' }}"
+
   
     - name: check if in cluster
       uri:
