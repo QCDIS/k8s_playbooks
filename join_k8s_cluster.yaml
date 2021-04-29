@@ -75,7 +75,7 @@
       register: k8s_nodes_output
       retries: 10
       delay: 1
-      until: groups['all'] | length | int - 1 != k8s_nodes_output.stdout_lines | length
+      until: groups['all'] | length | int - 1 == k8s_nodes_output.stdout_lines | length
       
 #     - systemd:
 #         state: restarted
