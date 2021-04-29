@@ -71,35 +71,6 @@
       become: yes
       when: url_command_result.status != 200  
       
-    - systemd:
-        state: restarted
-        daemon_reload: yes
-        name: "{{item}}"
-      with_items:
-        - "docker"
-        - "kubelet"
-      when: url_command_result.status != 200
-      become: yes
-     
-      
-    - reboot:
-      become: yes
-      when: url_command_result.status != 200
-
-    - name: Wait for the reboot to complete if there was a change.
-      wait_for_connection:
-        connect_timeout: 20
-        sleep: 5
-        delay: 5
-        timeout: 300
-      when: url_command_result.status != 200
-      
-
-    - name: join
-      shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-      become: yes
-      when: url_command_result.status != 200
-      
     - shell: kubectl get nodes -o json | jq -rc .
       register: k8s_nodes_output
 #       until: k8s_nodes_output == "READY"
@@ -108,6 +79,44 @@
     
     - debug: 
         var: k8s_nodes_output
+      
+#     - systemd:
+#         state: restarted
+#         daemon_reload: yes
+#         name: "{{item}}"
+#       with_items:
+#         - "docker"
+#         - "kubelet"
+#       when: url_command_result.status != 200
+#       become: yes
+     
+      
+#     - reboot:
+#       become: yes
+#       when: url_command_result.status != 200
+
+#     - name: Wait for the reboot to complete if there was a change.
+#       wait_for_connection:
+#         connect_timeout: 20
+#         sleep: 5
+#         delay: 5
+#         timeout: 300
+#       when: url_command_result.status != 200
+      
+
+#     - name: join
+#       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
+#       become: yes
+#       when: url_command_result.status != 200
+      
+#     - shell: kubectl get nodes -o json | jq -rc .
+#       register: k8s_nodes_output
+# #       until: k8s_nodes_output == "READY"
+# #       retries: 10
+# #       delay: 1
+    
+#     - debug: 
+#         var: k8s_nodes_output
     
 #     - fetch: 
 #         src: /tmp/k8s_output_nodes
