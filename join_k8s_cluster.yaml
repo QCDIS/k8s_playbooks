@@ -49,6 +49,9 @@
     - shell: kubectl get nodes -o json #> /tmp/k8s_nods.json
       register: k8s_nods
       
+    - debug:
+        var: k8s_nods
+      
 #     - fetch: 
 #         src: ${HOME}/.kube/config 
 #         dest: /tmp/config
