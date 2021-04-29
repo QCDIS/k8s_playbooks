@@ -83,6 +83,7 @@
      
       
     - reboot:
+      become: yes
       when: url_command_result.status != 200
 
     - name: Wait for the reboot to complete if there was a change.
