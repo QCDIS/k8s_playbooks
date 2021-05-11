@@ -15,10 +15,12 @@
     update_cache: yes
   register: update_result
   ignore_errors: True
+  become: yes
 
 - name: Update from shell
   shell: apt update
   when: update_result.failed == True
+  become: yes
 
 - name: Install a list of packages
   apt:
@@ -29,10 +31,12 @@
     - containerd
     - runc
     state: absent
+  become: yes
 
 - name: Update
   apt:
     update_cache: yes
+  become: yes
 
 
 - name: remove old
@@ -44,17 +48,20 @@
     - gnupg
     - lsb-release
     state: present
+  become: yes    
 
 - name: Add Docker GPG apt Key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+  become: yes
 
 - name: Update
   apt:
 #     upgrade: yes
     update_cache: yes
 #     autoremove: yes
+  become: yes
 
 - shell: "echo $(lsb_release -cs)"
   register: dist
@@ -63,13 +70,15 @@
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu "{{ dist.stdout }}" stable
     state: present
+  become: yes
 
 - name: Update and upgrade
   apt:
     update_cache: yes
+  become: yes
 
-
-- shell: "sudo dpkg --configure -a"
+- shell: "dpkg --configure -a"
+  become: yes
 
 - name: Install docker
   apt:
@@ -77,7 +86,8 @@
     - docker-ce
     - docker-ce-cli
     - containerd.io
-
+  become: yes
+  
 - name: Change data-root location in /etc/docker/daemon.json if mount exists
   shell: |
     echo '{"data-root": "/data"}' > /etc/docker/daemon.json
@@ -89,3 +99,4 @@
     state: restarted
   ignore_errors: yes
   when: mount_volume.stat.exists == True
+  become: yes
