@@ -21,6 +21,13 @@
         path: /tmp/node_ports/
         state: directory
         
+        
+    - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
+      register: namespaces
+      
+    - debug:
+        var: namespaces
+        
     - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
