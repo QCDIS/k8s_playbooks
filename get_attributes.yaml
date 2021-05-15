@@ -31,9 +31,9 @@
     - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
-      with_items:
-        - "kubernetes-dashboard"
-        - "default"
+      with_items: "{{namespaces.stdout_lines}}"
+#         - "kubernetes-dashboard"
+#         - "default"
         
 
     - name: Get the public IP address of the network.
