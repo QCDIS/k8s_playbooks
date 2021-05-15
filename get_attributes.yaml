@@ -60,7 +60,7 @@
     - set_fact:
         credential:
           token_type: k8s_dashboard_token
-          token: "{{k8s_dashboard_token.stdout | replace('token:      ','') }}"
+          token: "{{k8s_dashboard_token.stdout}}"
        
        
     - include: get_k8s_conf.yaml
