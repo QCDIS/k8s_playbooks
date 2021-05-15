@@ -41,7 +41,7 @@
 #         var: k8s_secrets      
       
     - name: get k8s_dashboard_token
-      shell: kubectl get secret -n kubernetes-dashboard -o json | jq -r '.items[] | select(.metadata.name | contains("kubernetes-dashboard-token")) | .data.token'
+      shell: kubectl get secret -n kubernetes-dashboard -o json | jq -r '.items[] | select(.metadata.name | contains("kubernetes-dashboard-token")) | .data.token' | base64 -d
       register: k8s_dashboard_token
 #       until: k8s_dashboard_token.stdout.find("token") != -1
 #       retries: 10
