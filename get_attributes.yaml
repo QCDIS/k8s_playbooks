@@ -55,6 +55,7 @@
     - uri:
         url: "{{item}}"
         method: Get
+        validate_certs: no
       changed_when: false
       register: uri_out
 #       until: uri_out.status == 200
