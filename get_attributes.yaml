@@ -60,6 +60,7 @@
 #       until: uri_out.status == 200
 #       retries: 6
 #       delay: 10
+      with_items: "{{ node_ports.stdout_lines }}" 
       
       
     - debug:
