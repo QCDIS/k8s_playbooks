@@ -52,11 +52,15 @@
     - shell: jq -r .url /tmp/node_ports/all_node_ports.json
       register: node_ports
       
-     
     - uri:
         url: "{{item}}""
-      with_items: "{{node_ports.stdout_lines}}"
+        method: Get
+      changed_when: false
       register: uri_out
+#       until: uri_out.status == 200
+#       retries: 6
+#       delay: 10
+      
       
     - debug:
         var: uri_out
