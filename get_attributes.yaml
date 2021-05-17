@@ -32,8 +32,6 @@
       vars: 
         k8s_namespace: "{{ item }}"
       with_items: "{{namespaces.stdout_lines}}"
-#         - "kubernetes-dashboard"
-#         - "default"
         
 
     - name: Get the public IP address of the network.
@@ -58,6 +56,7 @@
         validate_certs: no
       changed_when: false
       register: uri_out
+      ignore_errors: yes
 #       until: uri_out.status == 200
 #       retries: 6
 #       delay: 10
