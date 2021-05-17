@@ -53,7 +53,7 @@
       register: node_ports
       
     - uri:
-        url: "{{item}}""
+        url: "{{item}}"
         method: Get
       changed_when: false
       register: uri_out
