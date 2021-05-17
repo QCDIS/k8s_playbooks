@@ -70,11 +70,12 @@
       with_items: "{{ uri_out.results }}" 
       when: item.failed
       
-      
-    - replace:
+             
+    - replace: 
         path: /tmp/node_ports/all_node_ports.json
-        replace: 'httphttps'
-        regexp: 'http'
+        regexp: 'httphttps'
+        replace: 'http'
+        
 
     
        
