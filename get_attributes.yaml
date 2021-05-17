@@ -65,16 +65,10 @@
     - lineinfile:
         path: /tmp/node_ports/all_node_ports.json
         regexp: "{{item.url}}"
-        line: "http{{item.url}}"
+        line: "\{\"url\"\:\"http{{item.url}}\}\""
         state: present
       with_items: "{{ uri_out.results }}" 
       when: item.failed
-     
-
-
-    - debug: var=item
-      with_file:
-        - "/tmp/node_ports/all_node_ports.json"
     
        
     - include: get_dashboard_token.yaml
