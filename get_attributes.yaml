@@ -53,7 +53,7 @@
 
     - wait_for:
         port: "{{item}}"
-        host: {{public_ip['json']['ip']}}
+        host: "{{public_ip['json']['ip']}}"
         delay: 10
       with_items: "{{ node_ports.stdout_lines }}"
       
@@ -95,7 +95,7 @@
           token_type: k8s_dashboard_token
           token: "{{k8s_dashboard_token.stdout}}"
        
-       
+A resolvable hostname or IP address to wait for.       
     - include: get_k8s_conf.yaml
    
     - debug:
