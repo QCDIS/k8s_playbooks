@@ -41,8 +41,8 @@
       changed_when: false
       register: public_ip
       until: public_ip.status == 200
-      retries: 6
-      delay: 10
+      retries: 10
+      delay: 5
         
     - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
       with_items: "{{namespaces.stdout_lines}}"
@@ -57,9 +57,9 @@
       changed_when: false
       register: uri_out
       ignore_errors: yes
-#       until: uri_out.status == 200
-#       retries: 6
-#       delay: 10
+      until: uri_out.status == 200
+      retries: 10
+      delay: 5
       with_items: "{{ node_ports.stdout_lines }}"
     
     - lineinfile:
