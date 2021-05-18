@@ -94,8 +94,7 @@
         credential:
           token_type: k8s_dashboard_token
           token: "{{k8s_dashboard_token.stdout}}"
-       
-A resolvable hostname or IP address to wait for.       
+             
     - include: get_k8s_conf.yaml
    
     - debug:
