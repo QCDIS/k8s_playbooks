@@ -49,6 +49,13 @@
 
     - shell: jq -r .url /tmp/node_ports/all_node_ports.json
       register: node_ports
+
+
+    - wait_for:
+        port: "{{item}}"
+        host: {{public_ip['json']['ip']}}
+        delay: 10
+      with_items: "{{ node_ports.stdout_lines }}"
       
     - uri:
         url: "{{item}}"
