@@ -24,10 +24,7 @@
         
     - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
       register: namespaces
-      
-    - debug:
-        var: namespaces
-        
+              
     - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
@@ -44,12 +41,13 @@
       retries: 10
       delay: 5
       
-    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json
+    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
       with_items: "{{namespaces.stdout_lines}}"
+
+
+    - shell: jq -r .url /tmp/node_ports/ports.json 
       register: ports
-      
-    - debug:
-        var: ports
+
       
     - wait_for:
         port: "{{item|int}}"
