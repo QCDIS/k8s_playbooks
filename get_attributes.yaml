@@ -57,9 +57,9 @@
       changed_when: false
       register: uri_out
       ignore_errors: yes
-      until: uri_out.status == 200
-      retries: 10
-      delay: 8
+#       until: uri_out.status == 200
+#       retries: 10
+#       delay: 8
       with_items: "{{ node_ports.stdout_lines }}"
     
     - lineinfile:
