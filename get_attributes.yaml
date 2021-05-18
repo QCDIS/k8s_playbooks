@@ -43,6 +43,17 @@
       until: public_ip.status == 200
       retries: 10
       delay: 5
+      
+    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json
+      with_items: "{{namespaces.stdout_lines}}"
+      register: ports
+      
+    - wait_for:
+        port: "{{item|int}}"
+        host: "{{public_ip['json']['ip']}}"
+        delay: 5
+      with_items: "{{ ports.stdout_lines }}"
+      
         
     - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
       with_items: "{{namespaces.stdout_lines}}"
@@ -51,11 +62,7 @@
       register: node_ports
 
 
-    - wait_for:
-        port: "{{item|int}}"
-        host: localhost
-        delay: 5
-      with_items: "{{ node_ports.stdout_lines }}"
+
       
     - uri:
         url: "{{item}}"
