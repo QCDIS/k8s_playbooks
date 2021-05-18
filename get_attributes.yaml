@@ -45,7 +45,7 @@
       with_items: "{{namespaces.stdout_lines}}"
 
 
-    - shell: jq -r .url /tmp/node_ports/ports.json 
+    - shell: cat /tmp/node_ports/ports.json 
       register: ports
 
       
