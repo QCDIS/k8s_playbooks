@@ -85,7 +85,7 @@
       
     - replace: 
         path: /tmp/node_ports/all_node_ports.json
-        regexp: '\''
+        regexp: '''
         replace: '"'
         
     - replace: 
