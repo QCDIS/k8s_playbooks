@@ -91,7 +91,7 @@
         replace: 'http'
         
 
-    - shell: jq -r .url /tmp/node_ports/all_node_ports.json
+    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_node_ports.json && jq -r .url /tmp/node_ports/all_node_ports.json
       register: node_ports
        
     - include: get_dashboard_token.yaml
