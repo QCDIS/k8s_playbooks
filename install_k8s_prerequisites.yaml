@@ -12,7 +12,11 @@
 
 - name: Install Python
   raw: apt -y update && apt install -y python-minimal
-  when: check_python.rc != 0    
+  when: check_python.rc != 0
+
+- package:
+    name: firewalld
+    state: present
 
 #     - name: autoremove and autoclean
 #       apt: 
