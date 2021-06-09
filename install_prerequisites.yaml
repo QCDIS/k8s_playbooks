@@ -5,5 +5,5 @@
     
     - include: ec2/ec2_mount.yaml
     - include: docker/install_docker.yaml
-    - include: install_k8s_prerequisites.yam
+    - include: install_k8s_prerequisites.yaml
     
