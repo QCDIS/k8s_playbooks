@@ -1,6 +1,8 @@
 ---        
 - hosts: master
   gather_facts: no
+  vars:
+      ansible_python_interpreter: /usr/bin/python3
   tasks:         
     - name: join cmd
       shell: kubeadm token create --print-join-command

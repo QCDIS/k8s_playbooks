@@ -4,7 +4,8 @@
   vars:
     k8s_state: present
     k8s_namespace: kubernetes-dashboard
-    k8s_dashboard_installed: lookup('env', 'k8s_dashboard_installed') 
+    k8s_dashboard_installed: lookup('env', 'k8s_dashboard_installed')
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
 
     - pip:
