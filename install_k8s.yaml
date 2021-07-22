@@ -21,13 +21,13 @@
         - kubernetes-cni
 
     - firewalld:
-        port: {{item}}/tcp
+        port: {{item}}
         permanent: yes
         state: enabled
       with_items:
-        - 8080
-        - 6443
-        - 10250
-        - 30000-32767
+        - "8080/tcp"
+        - "6443/tcp"
+        - "10250/tcp"
+        - "30000-32767/tcp"
 
 
