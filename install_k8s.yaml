@@ -21,7 +21,7 @@
         - kubernetes-cni
 
     - firewalld:
-        port: {{item}}/tcp
+        port: "{{item}}"/tcp
         permanent: yes
         state: enabled
       with_items:
