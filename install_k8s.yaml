@@ -20,14 +20,14 @@
         - kubectl
         - kubernetes-cni
 
-    - firewalld:
-        port: "{{item}}"
-        permanent: yes
-        state: enabled
-      with_items:
-        - "8080/tcp"
-        - "6443/tcp"
-        - "10250/tcp"
-        - "30000-32767/tcp"
+#     - firewalld:
+#         port: "{{item}}"
+#         permanent: yes
+#         state: enabled
+#       with_items:
+#         - "8080/tcp"
+#         - "6443/tcp"
+#         - "10250/tcp"
+#         - "30000-32767/tcp"
 
 
