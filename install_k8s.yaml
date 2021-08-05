@@ -26,6 +26,10 @@
         - "6443/tcp"
         - "10250/tcp"
         - "30000-32767/tcp"
+      register: firewall_out
+      
+    - debug:
+        var: firewall_out
 
 #     - firewalld:
 #         port: "{{item}}"
