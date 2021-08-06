@@ -26,6 +26,11 @@
       become: yes
       shell: swapoff -a     
       when: kubectl_command_result.rc != 0
+      
+    - name: kubeadm reset
+      shell: kubeadm reset -f
+      become: yes  
+      
   
     - name: kubeadm init
       shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}" 
