@@ -31,6 +31,28 @@
       shell: kubeadm reset -f
       become: yes  
       
+
+    - systemd:
+        state: restarted
+        name: docker
+      become: yes
+        
+    - systemd:
+        enabled: yes
+        name: docker
+      become: yes
+      
+    - systemd:
+        state: restarted
+        name: kubelet
+      become: yes
+        
+    - systemd:
+        enabled: yes
+        name: kubelet
+      become: yes
+
+      
   
     - name: kubeadm init
       shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}" 
