@@ -20,25 +20,26 @@
         - kubectl
         - kubernetes-cni
         
-    - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
-      with_items:
-        - "8080/tcp"
-        - "6443/tcp"
-        - "10250/tcp"
-        - "30000-32767/tcp"
-      register: firewall_out
-      
-    - debug:
-        var: firewall_out
-
-#     - firewalld:
-#         port: "{{item}}"
-#         permanent: yes
-#         state: enabled
+#     - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
 #       with_items:
 #         - "8080/tcp"
 #         - "6443/tcp"
 #         - "10250/tcp"
 #         - "30000-32767/tcp"
+#       register: firewall_out
+      
+#     - debug:
+#         var: firewall_out
+
+    - firewalld:
+        port: "{{item}}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      with_items:
+        - "8080/tcp"
+        - "6443/tcp"
+        - "10250/tcp"
+        - "30000-32767/tcp"
 
 
