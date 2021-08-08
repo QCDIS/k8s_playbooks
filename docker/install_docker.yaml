@@ -87,11 +87,29 @@
     - docker-ce-cli
     - containerd.io
   become: yes
-  
-- name: Change data-root location in /etc/docker/daemon.json if mount exists
-  shell: |
-    echo '{"data-root": "/data"}' > /etc/docker/daemon.json
+ 
+- set_fact:
+    exec-opts: "[\"native.cgroupdriver=systemd\"]"    
+    
+- copy: content="{{ exec-opts }}" dest=/etc/docker/daemon.json    
+
+- set_fact:
+    data-root: "data" 
   when: mount_volume.stat.exists == True
+  
+- copy: content="{{ data-root }}" dest=/tmp/daemon.json    
+  when: mount_volume.stat.exists == True
+  
+- shell: jq -s '.[0] * .[1]' /tmp/daemon.json /etc/docker/daemon.json > /tmp/daemon2.json    
+  when: mount_volume.stat.exists == True
+  
+- shell: jq -s '.[0] * .[1]' /tmp/daemon.json /etc/docker/daemon.json > /tmp/daemon2.json    
+  when: mount_volume.stat.exists == True
+  
+- command: mv /tmp/daemon2.json /etc/docker/daemon.json  
+  when: mount_volume.stat.exists == True
+  
+  
 
 - name: Restart service docker, in all cases
   service:
