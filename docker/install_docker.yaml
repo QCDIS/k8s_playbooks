@@ -88,17 +88,8 @@
     - containerd.io
   become: yes
  
-# - set_fact:
-#     exec_opts: "exec-opts: [\"native.cgroupdriver=systemd\"]"    
-    
-# - copy: content='{"exec-opts": ["native.cgroupdriver=systemd"]}' dest=/etc/docker/daemon.json    
 - shell: echo '{"exec-opts": ["native.cgroupdriver=systemd"]}' > /etc/docker/daemon.json  
-
-# - set_fact:
-#     data-root: "data" 
-#   when: mount_volume.stat.exists == True
   
-# - copy: content='{"data-root": "data"}' dest=/tmp/daemon.json 
 - shell: echo '{"data-root": "data"}'  > /tmp/daemon.json 
   when: mount_volume.stat.exists == True
   
