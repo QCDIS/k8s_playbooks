@@ -55,6 +55,15 @@
     - shell: service kubelet restart
       become: yes
       
+    - shell: systemctl daemon-reload
+      become: yes
+      
+    - shell: systemctl restart docker
+      become: yes
+    
+    - shell: systemctl restart kubelet
+      become: yes
+      
   
     - name: kubeadm init
       shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}"
