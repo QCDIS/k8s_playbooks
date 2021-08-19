@@ -92,6 +92,11 @@
   
 # - shell: echo '{"data-root": "data"}'  > /tmp/daemon.json 
 #   when: mount_volume.stat.exists == True
+
+
+- copy:
+    src: "{{ playbook_dir }}"/daemon.json
+    dest: /etc/docker/daemon.json  
   
 - shell: jq -s '.[0] * .[1]' "{{ playbook_dir }}"/daemon_data.json "{{ playbook_dir }}"/daemon.json > /tmp/daemon2.json    
   when: mount_volume.stat.exists == True
