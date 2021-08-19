@@ -88,7 +88,7 @@
     - containerd.io
   become: yes
  
-- shell: echo '{"exec-opts": ["native.cgroupdriver=systemd"]}' > /etc/docker/daemon.json  
+- shell: "echo '{\"exec-opts\"\:[\"native.cgroupdriver=systemd\"]}' > /etc/docker/daemon.json"
   
 - shell: echo '{"data-root": "data"}'  > /tmp/daemon.json 
   when: mount_volume.stat.exists == True
