@@ -91,7 +91,7 @@
 # - set_fact:
 #     exec_opts: "exec-opts: [\"native.cgroupdriver=systemd\"]"    
     
-- copy: content='{"exec-opts: [\"native.cgroupdriver=systemd\"]"}' dest=/etc/docker/daemon.json    
+- copy: content='{"exec-opts": ["native.cgroupdriver=systemd"]}' dest=/etc/docker/daemon.json    
 
 # - set_fact:
 #     data-root: "data" 
