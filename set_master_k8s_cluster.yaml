@@ -52,6 +52,8 @@
         name: kubelet
       become: yes
 
+    - shell: service kubelet restart
+      become: yes
       
   
     - name: kubeadm init
