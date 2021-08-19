@@ -109,5 +109,5 @@
     name: docker
     state: restarted
   ignore_errors: yes
-  when: mount_volume.stat.exists == True
+#   when: mount_volume.stat.exists == True
   become: yes
