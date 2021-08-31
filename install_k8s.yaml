@@ -12,23 +12,23 @@
         repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
         state: present
 
-    - package:
-        name:
-          - kubeadm=1.20.0-00
-          - kubelet=1.20.0-00
-          - kubectl=1.20.0-00
-          - kubernetes-cni=1.20.0-00
-        state: present
+#     - package:
+#         name:
+#           - kubeadm=1.21
+#           - kubelet=1.21
+#           - kubectl=1.21
+#           - kubernetes-cni=1.21
+#         state: present
 
 
 
-#     - name: Install Kubernetes Packages
-#       apt:
-#         pkg:
-#         - kubeadm
-#         - kubelet
-#         - kubectl
-#         - kubernetes-cni
+    - name: Install Kubernetes Packages
+      apt:
+        pkg:
+          - kubeadm=1.21*
+          - kubelet=1.21*
+          - kubectl=1.21*
+          - kubernetes-cni=1.21*
         
 #     - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
 #       with_items:
