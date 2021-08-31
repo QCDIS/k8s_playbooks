@@ -14,10 +14,10 @@
 
     - package:
         name:
-          - kubeadm=1.21
-          - kubelet=1.21
-          - kubectl=1.21
-          - kubernetes-cni=1.21
+          - kubeadm=1.20.0-00
+          - kubelet=1.20.0-00
+          - kubectl=1.20.0-00
+          - kubernetes-cni=1.20.0-00
         state: present
 
 
