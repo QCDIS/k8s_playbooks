@@ -21,14 +21,14 @@
 #         state: present
 
 
-
-    - name: Install Kubernetes Packages
-      apt:
-        pkg:
-          - kubeadm=1.21*
-          - kubelet=1.21*
-          - kubectl=1.21*
-          - kubernetes-cni=1.21*
+    - shell: sudo apt install kubeadm:amd64=1.21
+#     - name: Install Kubernetes Packages
+#       apt:
+#         pkg:
+#           - kubeadm=1.21*
+#           - kubelet=1.21*
+#           - kubectl=1.21*
+#           - kubernetes-cni=1.21*
         
 #     - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
 #       with_items:
