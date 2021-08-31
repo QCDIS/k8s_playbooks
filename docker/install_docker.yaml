@@ -124,10 +124,7 @@
   
 - shell: jq -s '.[0] * .[1]' /tmp/daemon_data.json /etc/docker/daemon.json > /tmp/daemon2.json    
   when: mount_volume.stat.exists == True
-  
-- shell: jq -s '.[0] * .[1]' /tmp/daemon.json /etc/docker/daemon.json > /tmp/daemon2.json    
-  when: mount_volume.stat.exists == True
-  
+    
 - command: mv /tmp/daemon2.json /etc/docker/daemon.json  
   when: mount_volume.stat.exists == True
   
