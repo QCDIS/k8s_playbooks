@@ -22,9 +22,19 @@
   when: update_result.failed == True
   become: yes
 
-- name: Install a list of packages
-  apt:
-    pkg:
+# - name: remove a list of packages
+#   apt:
+#     pkg:
+#     - docker
+#     - docker-engine
+#     - docker.io
+#     - containerd
+#     - runc
+#     state: absent
+#   become: yes
+
+- package:
+    name: 
     - docker
     - docker-engine
     - docker.io
@@ -80,13 +90,23 @@
 - shell: "dpkg --configure -a"
   become: yes
 
-- name: Install docker
-  apt:
-    pkg:
+# - name: Install docker
+#   apt:
+#     pkg:
+#     - docker-ce
+#     - docker-ce-cli
+#     - containerd.io
+#   become: yes
+  
+- package:
+    name: 
     - docker-ce
     - docker-ce-cli
     - containerd.io
+    - jq 
+    state: present
   become: yes
+  
  
 # - shell: echo '{"exec-opts":["native.cgroupdriver=systemd"]}' > /etc/docker/daemon.json
   
