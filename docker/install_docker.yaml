@@ -117,8 +117,12 @@
 - copy:
     src: "{{ playbook_dir }}/docker/daemon.json"
     dest: /etc/docker/daemon.json  
+    
+- copy:
+    src: "{{ playbook_dir }}/docker/daemon_data.json"
+    dest: /tmp/daemon_data.json
   
-- shell: jq -s '.[0] * .[1]' "{{ playbook_dir }}"/daemon_data.json "{{ playbook_dir }}"/daemon.json > /tmp/daemon2.json    
+- shell: jq -s '.[0] * .[1]' /tmp/daemon_data.json /etc/docker/daemon.json > /tmp/daemon2.json    
   when: mount_volume.stat.exists == True
   
 - shell: jq -s '.[0] * .[1]' /tmp/daemon.json /etc/docker/daemon.json > /tmp/daemon2.json    
