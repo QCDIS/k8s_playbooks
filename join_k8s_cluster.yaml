@@ -73,7 +73,7 @@
     
     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
       register: k8s_nodes_output
-      retries: 20
+      retries: 50
       delay: 2
       until: groups['all'] | length | int - 1 == k8s_nodes_output.stdout_lines | length
       
