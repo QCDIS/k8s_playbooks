@@ -41,7 +41,7 @@
     - name: disable swap
       become: yes
       shell: swapoff -a    
-      when: url_command_result.status != 200
+#       when: url_command_result.status != 200
       
       
     - name: Add the br_netfilter module
@@ -69,7 +69,7 @@
     - name: join
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
-      when: url_command_result.status != 200  
+#       when: url_command_result.status != 200  
     
     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
       register: k8s_nodes_output
