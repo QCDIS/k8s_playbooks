@@ -105,8 +105,8 @@
              
     - include: get_k8s_conf.yaml
    
-    - debug:
-        var: kube_config
+#     - debug:
+#         var: kube_config
 
     - set_stats:
         data: 
@@ -115,5 +115,16 @@
             service_urls: "{{ node_ports.stdout_lines }}" 
             tokens: 
               - "{{ credential }}" 
+      
+
+    - set_stats:
+        data: 
+          kubernetes:
+            config: "{{kube_config}}"
+            service_urls: "{{ node_ports.stdout_lines }}" 
+            tokens: 
+              - "{{ credential }}" 
+              - "{{ argo_token }}"
+      when: argo_token is defined
       
       
