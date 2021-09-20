@@ -116,6 +116,9 @@
             tokens: 
               - "{{ credential }}" 
       
+    - debug:
+        var: argo_token
+      when: argo_token is defined
 
     - set_stats:
         data: 
