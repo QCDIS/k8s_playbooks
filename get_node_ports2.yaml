@@ -1,0 +1,143 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+                
+    - file:
+        path: node_ports
+        state: directory
+
+
+- hosts: master
+  gather_facts: no
+  tasks:
+          
+    - file:
+        state: absent
+        path: /tmp/node_ports/
+        
+    - file:
+        path: /tmp/node_ports/
+        state: directory
+        
+        
+    - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
+      register: namespaces
+              
+    - include:  get_node_ports.yaml
+      vars: 
+        k8s_namespace: "{{ item }}"
+      with_items: "{{namespaces.stdout_lines}}"
+        
+
+    - name: Get the public IP address of the network.
+      uri:
+        url: https://api.ipify.org?format=json
+        method: Get
+      changed_when: false
+      register: public_ip
+      until: public_ip.status == 200
+      retries: 10
+      delay: 5
+      
+      
+#     - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
+#       with_items: "{{namespaces.stdout_lines}}"
+           
+    - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json 
+    
+    - shell: jq . /tmp/node_ports/ports.json 
+      register: out
+      
+    - debug:
+        var: out
+
+    - include_vars:
+        file: /tmp/node_ports/ports.json 
+        name: ports
+          
+    - debug:
+        var: ports
+
+    - wait_for:
+        port: "{{item|int}}"
+        host: "{{public_ip['json']['ip']}}"
+        delay: 8
+        timeout: 500
+      with_items: "{{ ports }}"
+      
+        
+    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
+      with_items: "{{namespaces.stdout_lines}}"
+
+    - shell: jq -r .url /tmp/node_ports/all_node_ports.json
+      register: node_ports
+
+      
+    - uri:
+        url: "{{item}}"
+        method: Get
+        validate_certs: no
+      changed_when: false
+      register: uri_out
+      ignore_errors: yes
+#       until: uri_out.status == 200
+#       retries: 10
+#       delay: 8
+      with_items: "{{ node_ports.stdout_lines }}"
+    
+    - lineinfile:
+        path: /tmp/node_ports/all_node_ports.json
+        regexp: '{{item.url}}'
+        line: '{"url":"http{{item.url}}"}'
+        state: present
+      with_items: "{{ uri_out.results }}" 
+      when: item.failed
+      
+    
+        
+    - replace: 
+        path: /tmp/node_ports/all_node_ports.json
+        regexp: 'httphttps'
+        replace: 'http'
+        
+
+    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_node_ports.json && jq -r .url /tmp/node_ports/all_node_ports.json
+      register: node_ports
+       
+    - include: get_dashboard_token.yaml
+    
+        
+    - set_fact:
+        credential:
+          token_type: k8s_dashboard_token
+          token: "{{k8s_dashboard_token.stdout}}"
+             
+    - include: get_k8s_conf.yaml
+   
+#     - debug:
+#         var: kube_config
+
+    - set_stats:
+        data: 
+          kubernetes:
+            config: "{{kube_config}}"
+            service_urls: "{{ node_ports.stdout_lines }}" 
+            tokens: 
+              - "{{ credential }}" 
+      
+    - debug:
+        var: argo_token
+      when: argo_token is defined
+
+    - set_stats:
+        data: 
+          kubernetes:
+            config: "{{kube_config}}"
+            service_urls: "{{ node_ports.stdout_lines }}" 
+            tokens: 
+              - "{{ credential }}" 
+              - "{{ argo_token }}"
+      when: argo_token is defined
+      
