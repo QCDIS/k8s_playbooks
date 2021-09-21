@@ -41,31 +41,20 @@
       retries: 10
       delay: 5
       
-      
-#     - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
-#       with_items: "{{namespaces.stdout_lines}}"
-           
-    - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json 
-    
-    - shell: jq . /tmp/node_ports/ports.json 
-      register: out
-      
-    - debug:
-        var: out
+    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
+      with_items: "{{namespaces.stdout_lines}}"
 
-    - include_vars:
-        file: /tmp/node_ports/ports.json 
-        name: ports
-          
-    - debug:
-        var: ports
 
+    - shell: cat /tmp/node_ports/ports.json 
+      register: ports
+
+      
     - wait_for:
         port: "{{item|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 8
         timeout: 500
-      with_items: "{{ ports }}"
+      with_items: "{{ ports.stdout_lines }}"
       
         
     - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
@@ -140,5 +129,3 @@
               - "{{ credential }}" 
               - "{{ argo_token }}"
       when: argo_token is defined
-      
-      
