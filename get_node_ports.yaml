@@ -4,6 +4,10 @@
     namespace: "{{ k8s_namespace }}"
   register: k8s_services
   
+  
+- debug:
+    var: k8s_services
+  
 - name: "query node ports cluster names"
   debug:
     var: item
