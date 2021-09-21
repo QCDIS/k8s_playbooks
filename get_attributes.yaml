@@ -41,14 +41,20 @@
       retries: 10
       delay: 5
       
-    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
-      with_items: "{{namespaces.stdout_lines}}"
+      
+#     - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json 
+#       with_items: "{{namespaces.stdout_lines}}"
+           
+    - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json 
 
 
     - shell: cat /tmp/node_ports/ports.json 
       register: ports
-
       
+      
+    - debug:
+        var: ports
+
     - wait_for:
         port: "{{item|int}}"
         host: "{{public_ip['json']['ip']}}"
