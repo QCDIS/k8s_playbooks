@@ -13,7 +13,7 @@
 - copy: content="{{ k8s_services }}" dest=/tmp/k8s_services.json
 
   
-- shell: jq '.resources[] | select (.spec.type=="NodePort") | {name:.metadata.name,ports:{port:.spec.ports[].nodePort,port_namename:.spec.ports[].name}}' /tmp/k8s_services.json > /tmp/node_ports/{{ k8s_namespace }}.json
+- shell: jq '.resources[] | select (.spec.type=="NodePort") | {name:.metadata.name,ports:{port:.spec.ports[].nodePort,port_namename:.spec.ports[].name}}' /tmp/k8s_services.json > /tmp/node_ports/service_port_{{ k8s_namespace }}.json
 
 # - copy:
 #     content: "{{ node_ports }}"
