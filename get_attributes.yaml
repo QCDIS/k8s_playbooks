@@ -47,10 +47,10 @@
            
     - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json 
 
-
-    - copy: content="{{ ports }}" dest=/tmp/node_ports/ports.json 
-      
-      
+    - include_vars:
+        file: /tmp/node_ports/ports.json 
+        name: ports
+          
     - debug:
         var: ports
 
