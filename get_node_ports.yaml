@@ -12,7 +12,7 @@
 
 - copy: content="{{ k8s_services }}" dest=/tmp/k8s_services.json
 
-- shell: jq . /tmp/k8s_services.json
+- shell: jq '.k8s_services.resources[]' /tmp/k8s_services.json
   register: out
   
 - debug:
