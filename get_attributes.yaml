@@ -48,12 +48,12 @@
     - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
 
     - fetch:
-        src: /tmp/node_ports/all_ports_url.json
-        dest: /tmp/node_ports/all_ports_url.json
+        src: /tmp/node_ports/all_ports_url_unique_by.json
+        dest: /tmp/node_ports/all_ports_url_unique_by.json
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url.json
+        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url_unique_by.json
         name: all_ports_url
 
     - wait_for:
@@ -73,7 +73,7 @@
       with_items: "{{ all_ports_url['all_ports'] }}"
 
     - lineinfile:
-        path: /tmp/node_ports/all_ports_url.json
+        path: /tmp/node_ports/all_ports_url_unique_by.json
         regexp: '{{item.url}}'
         line: '"url":"http{{item.url}}"'
         state: present
@@ -81,7 +81,7 @@
       when: item.failed
 
     - replace:
-        path: /tmp/node_ports/all_ports_url.json
+        path: /tmp/node_ports/all_ports_url_unique_by.json
         regexp: 'httphttps'
         replace: 'http'
 
@@ -91,12 +91,8 @@
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url_unique_by.json
+        file: /tmp/node_ports/all_ports_url_unique_by.json/master/tmp/node_ports/all_ports_url_unique_by.json
         name: all_ports_url_unique_by
-
-
-    - debug:
-        var: all_ports_url_unique_by
 
     - include: get_dashboard_token.yaml
 
