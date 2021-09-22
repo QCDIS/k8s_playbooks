@@ -49,19 +49,10 @@
 
     - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
 
-    - shell: ls -lah  /tmp/node_ports/
-      register: out
 
-    - debug:
-        var: out
-
-
-    - shell: jq . /tmp/node_ports/ports.json
-      register: out
-
-    - debug:
-        var: out
-
+    - fetch:
+        src: /tmp/node_ports/ports.json
+        dest: /tmp/node_ports/ports.json
 
 
     - include_vars:
