@@ -69,6 +69,12 @@
 
     - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),"name":(.name+"-"+(.ports.port|tostring))}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
 
+    - include_vars:
+        file: /tmp/node_ports/ports.json/master/tmp/node_ports/all_node_ports.json
+        name: all_node_ports
+
+
+
 #    - fetch:
 #        src: /tmp/node_ports/all_node_ports.json
 #        dest: /tmp/node_ports/all_node_ports.json
@@ -141,9 +147,9 @@
             tokens: 
               - "{{ credential }}" 
       
-    - debug:
-        var: argo_token
-      when: argo_token is defined
+#    - debug:
+#        var: argo_token
+#      when: argo_token is defined
 
     - set_stats:
         data: 
