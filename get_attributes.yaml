@@ -61,7 +61,7 @@
       with_items: "{{ ports['node_ports'] }}"
       
 
-    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),name:.ports.name}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
+    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),name:(.name+.ports.name)}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
 
     - fetch:
         src: /tmp/node_ports/all_node_ports.json
@@ -70,8 +70,9 @@
 
 
     - include_vars:
-        file: /tmp/node_ports/ports.json/master/tmp/node_ports/all_node_ports.json
+        file: /tmp/node_ports/all_node_ports.json
         name: all_node_ports
+      remote_src: yes
 
 
     - debug:
