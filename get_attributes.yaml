@@ -64,7 +64,7 @@
 
 
     - debug:
-        var: item.value['ports']['port']
+        var: item.value
       with_items: "{{ ports | dict2items }}"
 
       
