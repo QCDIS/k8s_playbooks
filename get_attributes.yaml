@@ -41,12 +41,11 @@
       retries: 10
       delay: 5
 
+    - shell: "jq -s '. | { all_services : . }' /tmp/*_k8s_services.json > /tmp/all_services.json"
 
-  - shell: "jq -s '. | { all_services : . }' /tmp/*_k8s_services.json > /tmp/all_services.json"
-
-  - fetch:
-      src: /tmp/all_services.json
-      dest: /tmp/all_services.json
+    - fetch:
+        src: /tmp/all_services.json
+        dest: /tmp/all_services.json
 #
 #
 #    - fetch:
