@@ -67,7 +67,7 @@
       with_items: "{{ ports['node_ports'] }}"
       
 
-    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),name:.name+"-"+(.ports.port|tostring)}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
+    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),name:.name"+(.ports.port|tostring)"}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
 
     - fetch:
         src: /tmp/node_ports/all_node_ports.json
