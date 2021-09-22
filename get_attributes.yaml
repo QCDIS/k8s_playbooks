@@ -47,7 +47,7 @@
 #    - shell: cat /tmp/node_ports/ports.json
 #      register: ports
 
-    - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
+    - shell: jq -s '.[]' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
 
 
     - fetch:
