@@ -65,7 +65,7 @@
 
     - debug:
         var: item
-      with_items: "{{ ports }}"
+      with_items: "{{ ports | dict2items }}"
 
       
     - wait_for:
@@ -73,7 +73,7 @@
         host: "{{public_ip['json']['ip']}}"
         delay: 8
         timeout: 500
-      with_items: "{{ ports }}"
+      with_items: "{{ ports | dict2items }}"
       
         
     - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
