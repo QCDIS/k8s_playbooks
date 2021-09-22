@@ -47,14 +47,14 @@
 #    - shell: cat /tmp/node_ports/ports.json
 #      register: ports
 
-    - shell: jq -s -r '.[]' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
+    - shell: jq -s -r '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
 
 #    - shell: "tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}_clean.json /tmp/node_ports/{{ k8s_namespace }}.json"
-
-    - shell: tr -d '\n' <  /tmp/node_ports/ports.json  >  /tmp/node_ports/clean_ports.json
+#
+#    - shell: tr -d '\n' <  /tmp/node_ports/ports.json  >  /tmp/node_ports/clean_ports.json
 
     - fetch:
-        src: /tmp/node_ports/clean_ports.json
+        src: /tmp/node_ports/ports.json
         dest: /tmp/node_ports/ports.json
 
 
