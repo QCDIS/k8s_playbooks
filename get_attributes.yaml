@@ -49,7 +49,7 @@
 
     - shell: jq -s -r '.[]' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
 
-    - shell: "tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}_clean.json /tmp/node_ports/{{ k8s_namespace }}.json"
+#    - shell: "tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}_clean.json /tmp/node_ports/{{ k8s_namespace }}.json"
 
     - fetch:
         src: /tmp/node_ports/ports.json
