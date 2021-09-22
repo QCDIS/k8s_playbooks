@@ -78,38 +78,33 @@
         state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
-#
-#
-#
-#    - replace:
-#        path: /tmp/node_ports/all_node_ports.json
-#        regexp: 'httphttps'
-#        replace: 'http'
-#
-#
-#    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_node_ports.json && jq -r .url /tmp/node_ports/all_node_ports.json
-#      register: node_ports
-#
-#    - include: get_dashboard_token.yaml
-#
-#
-#    - set_fact:
-#        credential:
-#          token_type: k8s_dashboard_token
-#          token: "{{k8s_dashboard_token.stdout}}"
-#
-#    - include: get_k8s_conf.yaml
-#
-##     - debug:
-##         var: kube_config
-#
-#    - set_stats:
-#        data:
-#          kubernetes:
-#            config: "{{kube_config}}"
-#            service_urls: "{{ node_ports.stdout_lines }}"
-#            tokens:
-#              - "{{ credential }}"
+
+    - replace:
+        path: /tmp/node_ports/all_ports_url.json
+        regexp: 'httphttps'
+        replace: 'http'
+
+
+    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_ports_url.json && jq -r .url /tmp/node_ports/all_node_ports.json
+      register: node_ports
+
+    - include: get_dashboard_token.yaml
+
+
+    - set_fact:
+        credential:
+          token_type: k8s_dashboard_token
+          token: "{{k8s_dashboard_token.stdout}}"
+
+    - include: get_k8s_conf.yaml
+
+    - set_stats:
+        data:
+          kubernetes:
+            config: "{{kube_config}}"
+            service_urls: "{{ node_ports.stdout_lines }}"
+            tokens:
+              - "{{ credential }}"
 #
 ##    - debug:
 ##        var: argo_token
