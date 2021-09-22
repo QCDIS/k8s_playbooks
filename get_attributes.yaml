@@ -41,7 +41,7 @@
       retries: 10
       delay: 5
 
-    - shell: "jq -s '{all_ports:[.[]]}' /tmp/*_k8s_services.json > /tmp/node_ports/all_ports.json"
+    - shell: "jq -s '{all_ports:[.[]]}' /tmp/node_ports/service_port_*.json > /tmp/node_ports/all_ports.json"
 
     - shell: jq '.all_ports[] |= .+{url:("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring))}' /tmp/node_ports/all_ports.json > /tmp/node_ports/all_ports_url.json
 
