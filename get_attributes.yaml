@@ -74,16 +74,16 @@
         dest: /tmp/node_ports/all_node_ports.json
 
 
-
-    - include_vars:
-        file: /tmp/node_ports/all_node_ports.json
-        name: all_node_ports
-      remote_src: yes
-
-
-    - debug:
-        var: item
-      with_items: "{{ all_node_ports }}"
+#
+#    - include_vars:
+#        file: /tmp/node_ports/all_node_ports.json
+#        name: all_node_ports
+#      remote_src: yes
+#
+#
+#    - debug:
+#        var: item
+#      with_items: "{{ all_node_ports }}"
 
       
     - uri:
