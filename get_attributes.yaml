@@ -76,8 +76,14 @@
       with_items: "{{ ports | dict2items }}"
       
         
-    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/all_node_ports.json 
-      with_items: "{{namespaces.stdout_lines}}"
+#    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/service_port_{{ k8s_namespace }}.json >> /tmp/node_ports/all_node_ports.json
+    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item|tostring))}' /tmp/node_ports/service_port_{{ k8s_namespace }}.json >> /tmp/node_ports/all_node_ports.json
+      with_items: "{{ ports | dict2items }}"
+      register: out
+#      with_items: "{{namespaces.stdout_lines}}"
+
+    - debug:
+        var: out
 
     - shell: jq -r .url /tmp/node_ports/all_node_ports.json
       register: node_ports
