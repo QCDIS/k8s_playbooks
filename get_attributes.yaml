@@ -60,7 +60,7 @@
 
 
     - include_vars:
-        file: /tmp/node_ports/ports.json/master/tmp/node_ports/clean_ports.json
+        file: /tmp/node_ports/ports.json/master/tmp/node_ports/ports.json
         name: ports
 
 
