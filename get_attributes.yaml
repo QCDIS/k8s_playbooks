@@ -108,7 +108,7 @@
         data:
           kubernetes:
             config: "{{kube_config}}"
-            service_urls: "{{ all_ports_url_unique_by.all_ports }}"
+            services: "{{ all_ports_url_unique_by.all_ports }}"
             tokens:
               - "{{ credential }}"
 #
