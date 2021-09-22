@@ -45,6 +45,8 @@
 
     - shell: jq '.all_ports[] |= .+{url:("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring))}' /tmp/node_ports/all_ports.json > /tmp/node_ports/all_ports_url.json
 
+    - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
+
     - fetch:
         src: /tmp/node_ports/all_ports_url.json
         dest: /tmp/node_ports/all_ports_url.json
@@ -82,11 +84,6 @@
         path: /tmp/node_ports/all_ports_url.json
         regexp: 'httphttps'
         replace: 'http'
-
-
-    - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
-
-
 
     - fetch:
         src: /tmp/node_ports/all_ports_url_unique_by.json
