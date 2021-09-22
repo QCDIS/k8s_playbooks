@@ -84,18 +84,22 @@
         replace: 'http'
 
 
+    - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
+
+
+
     - fetch:
-        src: /tmp/node_ports/all_ports_url.json
-        dest: /tmp/node_ports/all_ports_url.json
+        src: /tmp/node_ports/all_ports_url_unique_by.json
+        dest: /tmp/node_ports/all_ports_url_unique_by.json
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url.json
-        name: all_ports_url
+        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url_unique_by.json
+        name: all_ports_url_unique_by
 
 
     - debug:
-        var: all_ports_url
+        var: all_ports_url_unique_by
 
     - include: get_dashboard_token.yaml
 
@@ -111,7 +115,7 @@
         data:
           kubernetes:
             config: "{{kube_config}}"
-            service_urls: "{{ all_ports_url.all_ports }}"
+            service_urls: "{{ all_ports_url_unique_by.all_ports }}"
             tokens:
               - "{{ credential }}"
 #
