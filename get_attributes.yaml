@@ -74,13 +74,8 @@
         dest: /tmp/node_ports/all_node_ports.json
 
     - include_vars:
-        file: /tmp/node_ports/ports.json/master/tmp/node_ports/all_node_ports.json
+        file: /tmp/node_ports/all_node_ports.json/master/tmp/node_ports/all_node_ports.json
         name: all_node_ports
-
-
-
-
-
 #
 #
 #    - debug:
