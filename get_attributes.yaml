@@ -56,7 +56,7 @@
 
 
     - include_vars:
-        file: /tmp/node_ports/ports.json
+        file: /tmp/node_ports/ports.json/master/tmp/node_ports/ports.json
         name: ports
 
 
