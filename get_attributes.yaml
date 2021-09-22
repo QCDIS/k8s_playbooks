@@ -44,11 +44,20 @@
 #    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json
 #      with_items: "{{namespaces.stdout_lines}}"
 
+#    - shell: cat /tmp/node_ports/ports.json
+#      register: ports
+
     - shell: jq -s '.' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json
 
 
-    - shell: cat /tmp/node_ports/ports.json 
-      register: ports
+
+    - include_vars:
+        file: /tmp/node_ports/ports.json
+        name: ports
+
+
+    - debug:
+        var: ports
 
       
     - wait_for:
