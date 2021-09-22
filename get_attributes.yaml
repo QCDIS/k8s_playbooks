@@ -62,11 +62,6 @@
         file: /tmp/node_ports/ports.json/master/tmp/node_ports/ports.json
         name: ports
 
-
-    - debug:
-        var: item['ports']['port']
-      with_items: "{{ ports['node_ports'] }}"
-
       
     - wait_for:
         port: "{{item['ports']['port']|int}}"
