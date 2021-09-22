@@ -73,7 +73,7 @@
     - lineinfile:
         path: /tmp/node_ports/all_ports_url.json
         regexp: '{{item.url}}'
-        line: '{"url":"http{{item.url}}"}'
+        line: '      {"url":"http{{item.url}}"}'
         state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
