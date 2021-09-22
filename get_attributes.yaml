@@ -53,9 +53,9 @@
 #
 #    - shell: tr -d '\n' <  /tmp/node_ports/ports.json  >  /tmp/node_ports/clean_ports.json
 
-    - fetch:
-        src: /tmp/node_ports/ports.json
-        dest: /tmp/node_ports/ports.json
+#    - fetch:
+#        src: /tmp/node_ports/ports.json
+#        dest: /tmp/node_ports/ports.json
 
 
 
