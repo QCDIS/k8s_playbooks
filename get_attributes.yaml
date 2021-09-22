@@ -64,12 +64,12 @@
 
 
     - debug:
-        var: item
+        var: item.value['ports']['port']
       with_items: "{{ ports | dict2items }}"
 
       
     - wait_for:
-        port: "{{item|int}}"
+        port: "{{item.value['ports']['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 8
         timeout: 500
