@@ -42,114 +42,121 @@
       delay: 5
 
 
-    - fetch:
-        src: /tmp/node_ports/service_port_{{item}}.json
-        dest: /tmp/node_ports/service_port_{{item}}.json
-      with_items: "{{namespaces.stdout_lines}}"
+  - shell: "jq -s '. | { all_services : . }' /tmp/*_k8s_services.json > /tmp/all_services.json"
 
-    - shell: "jq -s '. | { node_ports : . }' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json"
-
-    - fetch:
-        src: /tmp/node_ports/ports.json
-        dest: /tmp/node_ports/ports.json
-
-
-    - include_vars:
-        file: /tmp/node_ports/ports.json/master/tmp/node_ports/ports.json
-        name: ports
-
-      
-    - wait_for:
-        port: "{{item['ports']['port']|int}}"
-        host: "{{public_ip['json']['ip']}}"
-        delay: 6
-        timeout: 600
-      with_items: "{{ ports['node_ports'] }}"
-      
-
-    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),"name":(.name+"-"+(.ports.port|tostring))}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
-
-    - fetch:
-        src: /tmp/node_ports/all_node_ports.json
-        dest: /tmp/node_ports/all_node_ports.json
-
-    - include_vars:
-        file: /tmp/node_ports/all_node_ports.json/master/tmp/node_ports/all_node_ports.json
-        name: all_node_ports
-
-    - debug:
-        var: item
-      with_items: "{{ all_node_ports }}"
-
-      
-    - uri:
-        url: "{{item}}"
-        method: Get
-        validate_certs: no
-      changed_when: false
-      register: uri_out
-      ignore_errors: yes
-#       until: uri_out.status == 200
-      with_items: "{{ ports['node_ports'] }}"
-
-
-    - debug:
-        var: item
-      with_items: "{{ uri_out.results }}"
-      when: item.failed
-
-
-
-    - lineinfile:
-        path: /tmp/node_ports/all_node_ports.json
-        regexp: '{{item.url}}'
-        line: '{"url":"http{{item.url}}"}'
-        state: present
-      with_items: "{{ uri_out.results }}" 
-      when: item.failed
-      
-    
-        
-    - replace: 
-        path: /tmp/node_ports/all_node_ports.json
-        regexp: 'httphttps'
-        replace: 'http'
-        
-
-    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_node_ports.json && jq -r .url /tmp/node_ports/all_node_ports.json
-      register: node_ports
-       
-    - include: get_dashboard_token.yaml
-    
-        
-    - set_fact:
-        credential:
-          token_type: k8s_dashboard_token
-          token: "{{k8s_dashboard_token.stdout}}"
-             
-    - include: get_k8s_conf.yaml
-   
-#     - debug:
-#         var: kube_config
-
-    - set_stats:
-        data: 
-          kubernetes:
-            config: "{{kube_config}}"
-            service_urls: "{{ node_ports.stdout_lines }}" 
-            tokens: 
-              - "{{ credential }}" 
-      
+  - fetch:
+      src: /tmp/all_services.json
+      dest: /tmp/all_services.json
+#
+#
+#    - fetch:
+#        src: /tmp/node_ports/service_port_{{item}}.json
+#        dest: /tmp/node_ports/service_port_{{item}}.json
+#      with_items: "{{namespaces.stdout_lines}}"
+#
+#    - shell: "jq -s '. | { node_ports : . }' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json"
+#
+#    - fetch:
+#        src: /tmp/node_ports/ports.json
+#        dest: /tmp/node_ports/ports.json
+#
+#
+#    - include_vars:
+#        file: /tmp/node_ports/ports.json/master/tmp/node_ports/ports.json
+#        name: ports
+#
+#
+#    - wait_for:
+#        port: "{{item['ports']['port']|int}}"
+#        host: "{{public_ip['json']['ip']}}"
+#        delay: 6
+#        timeout: 600
+#      with_items: "{{ ports['node_ports'] }}"
+#
+#
+#    - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),"name":(.name+"-"+(.ports.port|tostring))}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
+#
+#    - fetch:
+#        src: /tmp/node_ports/all_node_ports.json
+#        dest: /tmp/node_ports/all_node_ports.json
+#
+#    - include_vars:
+#        file: /tmp/node_ports/all_node_ports.json/master/tmp/node_ports/all_node_ports.json
+#        name: all_node_ports
+#
 #    - debug:
-#        var: argo_token
+#        var: item
+#      with_items: "{{ all_node_ports }}"
+#
+#
+#    - uri:
+#        url: "{{item}}"
+#        method: Get
+#        validate_certs: no
+#      changed_when: false
+#      register: uri_out
+#      ignore_errors: yes
+##       until: uri_out.status == 200
+#      with_items: "{{ ports['node_ports'] }}"
+#
+#
+#    - debug:
+#        var: item
+#      with_items: "{{ uri_out.results }}"
+#      when: item.failed
+#
+#
+#
+#    - lineinfile:
+#        path: /tmp/node_ports/all_node_ports.json
+#        regexp: '{{item.url}}'
+#        line: '{"url":"http{{item.url}}"}'
+#        state: present
+#      with_items: "{{ uri_out.results }}"
+#      when: item.failed
+#
+#
+#
+#    - replace:
+#        path: /tmp/node_ports/all_node_ports.json
+#        regexp: 'httphttps'
+#        replace: 'http'
+#
+#
+#    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_node_ports.json && jq -r .url /tmp/node_ports/all_node_ports.json
+#      register: node_ports
+#
+#    - include: get_dashboard_token.yaml
+#
+#
+#    - set_fact:
+#        credential:
+#          token_type: k8s_dashboard_token
+#          token: "{{k8s_dashboard_token.stdout}}"
+#
+#    - include: get_k8s_conf.yaml
+#
+##     - debug:
+##         var: kube_config
+#
+#    - set_stats:
+#        data:
+#          kubernetes:
+#            config: "{{kube_config}}"
+#            service_urls: "{{ node_ports.stdout_lines }}"
+#            tokens:
+#              - "{{ credential }}"
+#
+##    - debug:
+##        var: argo_token
+##      when: argo_token is defined
+#
+#    - set_stats:
+#        data:
+#          kubernetes:
+#            config: "{{kube_config}}"
+#            service_urls: "{{ node_ports.stdout_lines }}"
+#            tokens:
+#              - "{{ credential }}"
+#              - "{{ argo_token }}"
 #      when: argo_token is defined
-
-    - set_stats:
-        data: 
-          kubernetes:
-            config: "{{kube_config}}"
-            service_urls: "{{ node_ports.stdout_lines }}" 
-            tokens: 
-              - "{{ credential }}" 
-              - "{{ argo_token }}"
-      when: argo_token is defined
