@@ -25,7 +25,7 @@
     - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
       register: namespaces
               
-    - include:  get_node_ports2.yaml
+    - include:  get_node_ports.yaml
       vars: 
         k8s_namespace: "{{ item }}"
       with_items: "{{namespaces.stdout_lines}}"
