@@ -69,16 +69,9 @@
 
     - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),"name":(.name+"-"+(.ports.port|tostring))}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
 
-    - fetch:
-        src: /tmp/node_ports/all_node_ports.json
-        dest: /tmp/node_ports/all_node_ports.json
-
-
-#
-#    - include_vars:
-#        file: /tmp/node_ports/all_node_ports.json
-#        name: all_node_ports
-#      remote_src: yes
+#    - fetch:
+#        src: /tmp/node_ports/all_node_ports.json
+#        dest: /tmp/node_ports/all_node_ports.json
 #
 #
 #    - debug:
@@ -94,10 +87,15 @@
       register: uri_out
       ignore_errors: yes
 #       until: uri_out.status == 200
-#       retries: 10
-#       delay: 8
-#      with_items: "{{ node_ports.stdout_lines }}"
       with_items: "{{ ports['node_ports'] }}"
+
+
+    - debug:
+        var: item
+      with_items: "{{ uri_out.results }}"
+      when: item.failed
+
+
 
     - lineinfile:
         path: /tmp/node_ports/all_node_ports.json
