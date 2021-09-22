@@ -45,14 +45,14 @@
 
     - shell: jq '.all_ports[] |= .+{url:("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring))}' /tmp/node_ports/all_ports.json > /tmp/node_ports/all_ports_url.json
 
-#    - fetch:
-#        src: /tmp/node_ports/all_ports_url.json
-#        dest: /tmp/node_ports/all_ports_url.json
-#
-#
-#    - include_vars:
-#        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url.json
-#        name: all_ports_url
+    - fetch:
+        src: /tmp/node_ports/all_ports_url.json
+        dest: /tmp/node_ports/all_ports_url.json
+
+
+    - include_vars:
+        file: /tmp/node_ports/all_ports_url.json/master/tmp/node_ports/all_ports_url.json
+        name: all_ports_url
 
     - wait_for:
         port: "{{item['ports']['port']|int}}"
