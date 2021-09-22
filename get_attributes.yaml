@@ -70,7 +70,6 @@
       ignore_errors: yes
       with_items: "{{ all_ports_url['all_ports'] }}"
 
-
     - lineinfile:
         path: /tmp/node_ports/all_ports_url.json
         regexp: '{{item.url}}'
@@ -78,11 +77,6 @@
         state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
-
-    - replace:
-        path: /tmp/node_ports/all_ports_url.json
-        regexp: 'httphttps'
-        replace: 'http'
 
     - fetch:
         src: /tmp/node_ports/all_ports_url.json
@@ -96,6 +90,12 @@
 
     - debug:
         var: all_ports_url
+
+
+    - replace:
+        path: /tmp/node_ports/all_ports_url.json
+        regexp: 'httphttps'
+        replace: 'http'
 
 
 #    - shell: sed -i -e "s/'/\"/g"  /tmp/node_ports/all_ports_url.json && jq -r .url /tmp/node_ports/all_node_ports.json
