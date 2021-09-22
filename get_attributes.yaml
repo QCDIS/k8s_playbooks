@@ -40,18 +40,8 @@
       until: public_ip.status == 200
       retries: 10
       delay: 5
-      
-#    - shell: jq -c -r '.results[] | .item[]' /tmp/node_ports/{{item}}.json >> /tmp/node_ports/ports.json
-#      with_items: "{{namespaces.stdout_lines}}"
-
-#    - shell: cat /tmp/node_ports/ports.json
-#      register: ports
 
     - shell: "jq -s '. | { node_ports : . }' /tmp/node_ports/service_port_*.json > /tmp/node_ports/ports.json"
-
-#    - shell: "tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}_clean.json /tmp/node_ports/{{ k8s_namespace }}.json"
-#
-#    - shell: tr -d '\n' <  /tmp/node_ports/ports.json  >  /tmp/node_ports/clean_ports.json
 
     - fetch:
         src: /tmp/node_ports/ports.json
@@ -70,18 +60,23 @@
         timeout: 500
       with_items: "{{ ports['node_ports'] }}"
       
-        
-#    - shell: jq -c -r '.results[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports/service_port_{{ k8s_namespace }}.json >> /tmp/node_ports/all_node_ports.json
+
     - shell: jq '.node_ports[] | {"url":("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring)),name:.ports.name}' /tmp/node_ports/ports.json > /tmp/node_ports/all_node_ports.json
-#      with_items: "{{ ports['node_ports'] }}"
-      register: out
-#      with_items: "{{namespaces.stdout_lines}}"
+
+    - fetch:
+        src: /tmp/node_ports/all_node_ports.json
+        dest: /tmp/node_ports/all_node_ports.json
+
+
+
+    - include_vars:
+        file: /tmp/node_ports/ports.json/master/tmp/node_ports/all_node_ports.json
+        name: all_node_ports
+
 
     - debug:
-        var: out
-
-    - shell: jq -r .url /tmp/node_ports/all_node_ports.json
-      register: node_ports
+        var: item
+      with_items: "{{ all_node_ports }}"
 
       
     - uri:
@@ -94,8 +89,9 @@
 #       until: uri_out.status == 200
 #       retries: 10
 #       delay: 8
-      with_items: "{{ node_ports.stdout_lines }}"
-    
+#      with_items: "{{ node_ports.stdout_lines }}"
+      with_items: "{{ ports['node_ports'] }}"
+
     - lineinfile:
         path: /tmp/node_ports/all_node_ports.json
         regexp: '{{item.url}}'
