@@ -45,6 +45,10 @@
         ports: "{{ ports + item.info }}"
       with_items: "{{services['services']}}"
 
+
+    - debug:
+        var: ports
+
     - wait_for:
         port: "{{item['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
