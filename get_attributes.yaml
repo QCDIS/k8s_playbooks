@@ -69,9 +69,17 @@
       with_items: "{{ urls['urls'] }}"
 
 
-    - shell: jq '.services[] | select(.ports[].nodePort=="{{item['ports']|int}}") | {service_name:.name,port:.ports[].nodePort,port_name:.ports[].name,"url":("https://{{public_ip['json']['ip']}}:"+(.ports[].nodePort|tostring))}' /tmp/services_array.json
+    - shell: jq '.services[] | select(.ports[].nodePort=="{{item['ports']|int}}") | {service_name:.name,port:.ports[].nodePort,port_name:.ports[].name,"url":("https://{{public_ip['json']['ip']}}:"+(.ports[].nodePort|tostring))}' /tmp/services_array.json >> /tmp/tmp_node_ports_services.json
       with_items: "{{ test_ports['node_ports'] }}"
       register: node_ports_services
+
+    - shell: jq  -s '{.}'  /tmp/tmp_node_ports_services.json >  /tmp/node_ports_services.json
+
+
+    - fetch:
+        src: /tmp/node_ports_services.json
+        dest: /tmp/node_ports_services.json
+        flat: yes
 
 
     - debug:
