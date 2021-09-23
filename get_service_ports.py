@@ -9,7 +9,7 @@ if __name__ == '__main__':
     f = open(svc_ports_path, )
     svc_ports = json.load(f)
 
-    services = []
+    services_array = []
     for pp in svc_ports:
         spec_type = pp['spec']['type']
         if spec_type.lower() == port_type.lower():
@@ -22,5 +22,6 @@ if __name__ == '__main__':
                 port_infos.append(port_info)
             service['ports'] = port_infos
 
-            services.append(service)
+            services_array.append(service)
+    services = {'services':services_array}
     print(json.dumps(services))
