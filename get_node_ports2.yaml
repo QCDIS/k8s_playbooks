@@ -4,7 +4,7 @@
     src: "{{ playbook_dir }}/get_service_ports.py"
     dest: /tmp/get_service_ports.py
 
-- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ public_ip }}" > /tmp/services.json
+- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ ip }}" > /tmp/services.json
 
 - shell: jq '{name:.metadata.name,ports:.spec.ports}' /tmp/svc_ports.json > /tmp/node_ports.json
 - shell: jq -s '{services:[.[]]}' /tmp/node_ports.json  > /tmp/services_array.json
