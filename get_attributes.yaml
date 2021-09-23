@@ -64,57 +64,46 @@
 
 
 
-    - lineinfile:
-        path: /tmp/services.json
-        regexp: '{{item.url}}'
-        line: '"url":"http{{item.url}}"'
-        state: present
-      with_items: "{{ uri_out.results }}"
-      when: item.failed
+#    - lineinfile:
+#        path: /tmp/services.json
+#        regexp: '{{item.url}}'
+#        line: '"url":"http{{item.url}}"'
+#        state: present
+#      with_items: "{{ uri_out.results }}"
+#      when: item.failed
 
+#    - replace:
+#        path: /tmp/services.json
+#        regexp: 'httphttps'
+#        replace: 'http'
 
-    - fetch:
-        src:  /tmp/services.json
-        dest:  /tmp/services.json
-        flat: yes
-
-    - include_vars:
-        file: /tmp/services.json
-        name: services
-        
-
-    - replace:
-        path: /tmp/services.json
-        regexp: 'httphttps'
-        replace: 'http'
-
-    - fetch:
-        src:  /tmp/services.json
-        dest:  /tmp/services.json
-        flat: yes
-
-    - include_vars:
-        file: /tmp/services.json
-        name: services
-
-
-
-    - include: get_dashboard_token.yaml
-
-    - set_fact:
-        credential:
-          token_type: k8s_dashboard_token
-          token: "{{k8s_dashboard_token.stdout}}"
-
-    - include: get_k8s_conf.yaml
-
-    - set_stats:
-        data:
-          kubernetes:
-            config: "{{kube_config}}"
-            services: "{{ services }}"
-            tokens:
-              - "{{ credential }}"
+#    - fetch:
+#        src:  /tmp/services.json
+#        dest:  /tmp/services.json
+#        flat: yes
+#
+#    - include_vars:
+#        file: /tmp/services.json
+#        name: services
+#
+#
+#
+#    - include: get_dashboard_token.yaml
+#
+#    - set_fact:
+#        credential:
+#          token_type: k8s_dashboard_token
+#          token: "{{k8s_dashboard_token.stdout}}"
+#
+#    - include: get_k8s_conf.yaml
+#
+#    - set_stats:
+#        data:
+#          kubernetes:
+#            config: "{{kube_config}}"
+#            services: "{{ services }}"
+#            tokens:
+#              - "{{ credential }}"
 ##
 ###    - debug:
 ###        var: argo_token
