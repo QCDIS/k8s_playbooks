@@ -25,7 +25,8 @@
 
 
     - include:  get_node_ports2.yaml
-        vars: "{{public_ip['json']['ip']}}"
+      vars:
+        public_ip: "{{public_ip['json']['ip']}}"
 
     - fetch:
         src:  /tmp/services.json
