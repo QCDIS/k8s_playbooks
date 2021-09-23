@@ -91,7 +91,7 @@
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json/master/tmp/node_ports/all_ports_url_unique_by.json
+        file: /tmp/node_ports/all_ports_url_unique_by.json/m_0/tmp/node_ports/all_ports_url_unique_by.json
         name: all_ports_url_unique_by
 
     - include: get_dashboard_token.yaml
