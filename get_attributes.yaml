@@ -46,7 +46,7 @@
 
     - debug:
         var: item
-      with_items: "{{ node_ports['node_ports']['ports'] }}"
+      with_items: "{{ node_ports['node_ports'] }}"
 
     - wait_for:
         port: "{{item['ports'][item.key]['port']|int}}"
