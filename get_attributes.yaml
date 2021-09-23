@@ -52,11 +52,11 @@
       with_items: "{{ test_ports['node_ports'] }}"
 
 
-    - shell: jq '.node_ports[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/node_ports_array.json > out.json
+    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > out.json
 
-    - shell: jq  -s '{services:[.[]]}'  out.json >  /tmp/node_ports_array_url.json
+    - shell: jq  -s '{services:[.[]]}'  out.json >  /tmp/services_array_url.json
 
-    - shell: jq '.node_ports[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/node_ports_array.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
+    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/node_ports_array.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
 
     - fetch:
         src: /tmp/urls.json
@@ -82,7 +82,7 @@
       with_items: "{{ urls['urls'] }}"
 
     - lineinfile:
-        path: /tmp/node_ports_array_url.json
+        path: /tmp/services_array_url.json
         regexp: '{{item.url}}'
         line: '"url":"http{{item.url}}"'
         state: present
@@ -90,23 +90,23 @@
       when: item.failed
 
     - replace:
-        path: /tmp/node_ports_array_url.json
+        path: /tmp/services_array_url.json
         regexp: 'httphttps'
         replace: 'http'
 
     - fetch:
-        src: /tmp/node_ports_array_url.json
-        dest: /tmp/node_ports_array_url.json
+        src: /tmp/services_array_url.json
+        dest: /tmp/services_array_url.json
         flat: yes
 
 
     - include_vars:
-        file: /tmp/node_ports_array_url.json
-        name: node_ports_array_url
+        file: /tmp/services_array_url.json
+        name: services_array_url
 
     - debug:
         var: item.ports
-      with_items: "{{ node_ports_array_url }}"
+      with_items: "{{ services_array_url }}"
 
 
     - include: get_dashboard_token.yaml
