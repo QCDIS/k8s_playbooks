@@ -55,7 +55,7 @@
         timeout: 600
       with_items: "{{ test_ports['node_ports'] }}"
 
-    - shell:  jq '.node_ports[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports_array.json > /tmp/node_ports_array_url.json
+    - shell:  jq '.node_ports[].ports[] | . + {"host":{{public_ip['json']['ip']}}}' /tmp/node_ports_array.json > /tmp/node_ports_array_host.json
 
     - uri:
         url: "{{item.url}}"
