@@ -14,14 +14,14 @@
   tasks:
 
     - name: Get the public IP address of the network.
-        uri:
-          url: https://api.ipify.org?format=json
-          method: Get
-        changed_when: false
-        register: public_ip
-        until: public_ip.status == 200
-        retries: 10
-        delay: 5
+      uri:
+        url: https://api.ipify.org?format=json
+        method: Get
+      changed_when: false
+      register: public_ip
+      until: public_ip.status == 200
+      retries: 10
+      delay: 5
 
 
     - include:  get_node_ports2.yaml
