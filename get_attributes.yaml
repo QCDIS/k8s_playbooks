@@ -37,10 +37,6 @@
         file: /tmp/services.json
         name: services
 
-    - debug:
-        var: item
-      with_items: "{{services['services']}}"
-
     - set_fact:
         ports: []
 
@@ -48,6 +44,11 @@
     - set_fact:
         ports: "{{ ports + item }}"
       with_items: "{{services['services']['ports']}}"
+
+
+    - debug:
+        var: ports
+
 
     - wait_for:
         port: "{{item|int}}"
