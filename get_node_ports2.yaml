@@ -10,9 +10,14 @@
 #   loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
 #   register: node_ports
 
-- copy: content="{{ k8s_services }}" dest=/tmp/k8s_services.json
+- copy: content="{{ k8s_services }}" dest=/tmp/{{k8s_namespace}}_k8s_services.json
 
-- shell: jq -r '.resources[] | select (.spec.type=="NodePort") | {name:.metadata.name,ports:{port:.spec.ports[].nodePort,name:.spec.ports[].name}}' /tmp/k8s_services.json > /tmp/node_ports/service_port_{{ k8s_namespace }}.json
+- shell: jq -r '.resources[] | select (.spec.type=="NodePort") | {name:.metadata.name,ports:{port:.spec.ports[].nodePort,name:.spec.ports[].name}}' /tmp/{{k8s_namespace}}_k8s_services.json > /tmp/node_ports/service_port_{{ k8s_namespace }}.json
+
+- fetch:
+    src: /tmp/node_ports/service_port_{{ k8s_namespace }}.json
+    dest: /tmp/node_ports/service_port_{{ k8s_namespace }}.json
+
 
 # - copy:
 #     content: "{{ node_ports }}"
