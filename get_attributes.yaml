@@ -47,12 +47,12 @@
 
 
     - debug:
-        var: item
+        var: item['port']
       with_items: "{{ports}}"
 
 
     - wait_for:
-        port: "{{item.port|int}}"
+        port: "{{item['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
