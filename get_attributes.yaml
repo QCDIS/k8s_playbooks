@@ -62,15 +62,13 @@
       ignore_errors: yes
       with_items: "{{ ports }}"
 
-
-
-    - lineinfile:
+    - replace:
         path: /tmp/services.json
-        regexp: '{{item.url}}'
-        line: '"http{{item.url}}"'
-        state: present
+        regexp: "{{ item.url }}"
+        replace: "http{{ item.url }}"
       with_items: "{{ uri_out.results }}"
       when: item.failed
+-
 
 
 #
