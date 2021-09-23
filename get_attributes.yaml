@@ -73,7 +73,7 @@
       with_items: "{{ test_ports['node_ports'] }}"
       register: node_ports_services
 
-    - shell: jq  -s '{.}'  /tmp/tmp_node_ports_services.json >  /tmp/node_ports_services.json
+    - shell: jq  -s '.'  /tmp/tmp_node_ports_services.json >  /tmp/node_ports_services.json
 
 
     - fetch:
