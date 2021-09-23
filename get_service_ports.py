@@ -18,7 +18,8 @@ if __name__ == '__main__':
             for port in pp['spec']['ports']:
                 port_type_lower_first = port_type[0].lower() + port_type[1:]
                 url = 'https://' + public_ip + ':' + str(port[port_type_lower_first])
-                port_info = {'name': port['name'], 'url': url}
+
+                port_info = {'name': port['name'], 'url': url, 'port':port[port_type_lower_first]}
                 port_infos.append(port_info)
             service['ports'] = port_infos
 
