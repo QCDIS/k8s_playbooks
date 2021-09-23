@@ -11,7 +11,6 @@ if __name__ == '__main__':
 
     services_array = []
     urls = []
-    ports = []
     for pp in svc_ports:
         spec_type = pp['spec']['type']
         if spec_type.lower() == port_type.lower():
@@ -22,8 +21,7 @@ if __name__ == '__main__':
                 url = 'https://' + public_ip + ':' + str(port[port_type_lower_first])
                 url_entry = {'url':url}
                 urls.append(url_entry)
-                ports_entry = {'port'+port[port_type_lower_first]}
-                ports.append(ports_entry)
+
                 port_info = {'name': port['name'], 'url': url, 'port':port[port_type_lower_first]}
                 port_infos.append(port_info)
             service['info'] = port_infos
