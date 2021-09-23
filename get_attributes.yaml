@@ -45,11 +45,6 @@
         ports: "{{ ports + item.info }}"
       with_items: "{{services['services']}}"
 
-
-    - debug:
-        var: item['port']
-      with_items: "{{ports}}"
-
     - wait_for:
         port: "{{item['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
@@ -57,14 +52,22 @@
         timeout: 600
       with_items: "{{ports}}"
 
+
+
+    - debug:
+        var: item['url']
+      with_items: "{{ports}}"
+
+
+
     - uri:
-        url: "{{item['url]}}"
+        url: "{{ item['url'] }}"
         method: Get
         validate_certs: no
       changed_when: false
       register: uri_out
       ignore_errors: yes
-      with_items: "{{ports}}"
+      with_items: "{{ ports }}"
 
 
 
