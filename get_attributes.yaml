@@ -13,135 +13,140 @@
   gather_facts: no
   tasks:
 
-    - include:  get_node_ports2.yaml
-        
-
     - name: Get the public IP address of the network.
-      uri:
-        url: https://api.ipify.org?format=json
-        method: Get
-      changed_when: false
-      register: public_ip
-      until: public_ip.status == 200
-      retries: 10
-      delay: 5
+        uri:
+          url: https://api.ipify.org?format=json
+          method: Get
+        changed_when: false
+        register: public_ip
+        until: public_ip.status == 200
+        retries: 10
+        delay: 5
+
+
+    - include:  get_node_ports2.yaml
+        vars: "{{public_ip['json']['ip']}}"
 
     - fetch:
-        src: /tmp/test_ports.json
-        dest: /tmp/test_ports.json
-        flat: yes
-
-
-    - include_vars:
-        file: /tmp/test_ports.json
-        name: test_ports
-
-    - wait_for:
-        port: "{{item['ports']|int}}"
-        host: "{{public_ip['json']['ip']}}"
-        delay: 6
-        timeout: 600
-      with_items: "{{ test_ports['node_ports'] }}"
-
-
-    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > /tmp/services_array_url_tmp.json
-
-    - shell: jq  -s '{services:[.[]]}'  /tmp/services_array_url_tmp.json >  /tmp/services_array_url.json
-
-    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array_url.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
-
-    - fetch:
-        src: /tmp/urls.json
-        dest: /tmp/urls.json
+        src:  /tmp/services.json
+        dest:  /tmp/services.json
         flat: yes
 
     - include_vars:
-        file: /tmp/urls.json
-        name: urls
-
-    - uri:
-        url: "{{item.url}}"
-        method: Get
-        validate_certs: no
-      changed_when: false
-      register: uri_out
-      ignore_errors: yes
-      with_items: "{{ urls['urls'] }}"
-
-
-    - shell: jq '.services[] | select(.ports[].nodePort=={{item['ports']|int}}) | {service_name:.name,port:.ports[].nodePort,port_name:.ports[].name,"url":("https://{{public_ip['json']['ip']}}:"+(.ports[].nodePort|tostring))}' /tmp/services_array.json >> /tmp/tmp_node_ports_services.json
-      with_items: "{{ test_ports['node_ports'] }}"
-      register: node_ports_services
-
-    - shell: jq  -s '.'  /tmp/tmp_node_ports_services.json >  /tmp/node_ports_services.json
-
-
-    - fetch:
-        src: /tmp/node_ports_services.json
-        dest: /tmp/node_ports_services.json
-        flat: yes
-
+        file: /tmp/services.json
+        name: services
 
     - debug:
-        var: node_ports_services
+        var: services
 
 
-
-    - lineinfile:
-        path: /tmp/services_array_url.json
-        regexp: '{{item.url}}'
-        line: '"url":"http{{item.url}}"'
-        state: present
-      with_items: "{{ uri_out.results }}"
-      when: item.failed
-
-    - replace:
-        path: /tmp/services_array_url.json
-        regexp: 'httphttps'
-        replace: 'http'
-
-    - fetch:
-        src: /tmp/services_array_url.json
-        dest: /tmp/services_array_url.json
-        flat: yes
-
-
-    - include_vars:
-        file: /tmp/services_array_url.json
-        name: services_array_url
-
-    - debug:
-        var: item.ports
-      with_items: "{{ services_array_url }}"
-
-
-    - include: get_dashboard_token.yaml
-
-    - set_fact:
-        credential:
-          token_type: k8s_dashboard_token
-          token: "{{k8s_dashboard_token.stdout}}"
-
-    - include: get_k8s_conf.yaml
-
-    - set_stats:
-        data:
-          kubernetes:
-            config: "{{kube_config}}"
-            services: "{{ all_ports_url_unique_by.all_ports }}"
-            tokens:
-              - "{{ credential }}"
 #
-##    - debug:
-##        var: argo_token
-##      when: argo_token is defined
+#    - wait_for:
+#        port: "{{item['ports']|int}}"
+#        host: "{{public_ip['json']['ip']}}"
+#        delay: 6
+#        timeout: 600
+#      with_items: "{{ test_ports['node_ports'] }}"
+#
+#
+#    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > /tmp/services_array_url_tmp.json
+#
+#    - shell: jq  -s '{services:[.[]]}'  /tmp/services_array_url_tmp.json >  /tmp/services_array_url.json
+#
+#    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array_url.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
+#
+#    - fetch:
+#        src: /tmp/urls.json
+#        dest: /tmp/urls.json
+#        flat: yes
+#
+#    - include_vars:
+#        file: /tmp/urls.json
+#        name: urls
+#
+#    - uri:
+#        url: "{{item.url}}"
+#        method: Get
+#        validate_certs: no
+#      changed_when: false
+#      register: uri_out
+#      ignore_errors: yes
+#      with_items: "{{ urls['urls'] }}"
+#
+#
+#    - shell: jq '.services[] | select(.ports[].nodePort=={{item['ports']|int}}) | {service_name:.name,port:.ports[].nodePort,port_name:.ports[].name,"url":("https://{{public_ip['json']['ip']}}:"+(.ports[].nodePort|tostring))}' /tmp/services_array.json >> /tmp/tmp_node_ports_services.json
+#      with_items: "{{ test_ports['node_ports'] }}"
+#      register: node_ports_services
+#
+#    - shell: jq  -s '.'  /tmp/tmp_node_ports_services.json >  /tmp/node_ports_services.json
+#
+#
+#    - fetch:
+#        src: /tmp/node_ports_services.json
+#        dest: /tmp/node_ports_services.json
+#        flat: yes
+#
+#
+#    - debug:
+#        var: node_ports_services
+#
+#
+#
+#    - lineinfile:
+#        path: /tmp/services_array_url.json
+#        regexp: '{{item.url}}'
+#        line: '"url":"http{{item.url}}"'
+#        state: present
+#      with_items: "{{ uri_out.results }}"
+#      when: item.failed
+#
+#    - replace:
+#        path: /tmp/services_array_url.json
+#        regexp: 'httphttps'
+#        replace: 'http'
+#
+#    - fetch:
+#        src: /tmp/services_array_url.json
+#        dest: /tmp/services_array_url.json
+#        flat: yes
+#
+#
+#    - include_vars:
+#        file: /tmp/services_array_url.json
+#        name: services_array_url
+#
+#    - debug:
+#        var: item.ports
+#      with_items: "{{ services_array_url }}"
+#
+#
+#    - include: get_dashboard_token.yaml
+#
+#    - set_fact:
+#        credential:
+#          token_type: k8s_dashboard_token
+#          token: "{{k8s_dashboard_token.stdout}}"
+#
+#    - include: get_k8s_conf.yaml
 #
 #    - set_stats:
 #        data:
 #          kubernetes:
 #            config: "{{kube_config}}"
-#            service_urls: "{{ node_ports.stdout_lines }}"
+#            services: "{{ all_ports_url_unique_by.all_ports }}"
 #            tokens:
 #              - "{{ credential }}"
-#              - "{{ argo_token }}"
-#      when: argo_token is defined
+##
+###    - debug:
+###        var: argo_token
+###      when: argo_token is defined
+##
+##    - set_stats:
+##        data:
+##          kubernetes:
+##            config: "{{kube_config}}"
+##            service_urls: "{{ node_ports.stdout_lines }}"
+##            tokens:
+##              - "{{ credential }}"
+##              - "{{ argo_token }}"
+##      when: argo_token is defined

@@ -1,12 +1,12 @@
 - shell: kubectl get svc --all-namespaces -o=jsonpath='{.items[*]}' | jq 'select(.spec.type=="NodePort")' | jq -s '.' > /tmp/svc_ports.json
 
+- copy:
+  src: "{{ playbook_dir }}"/get_service_ports.py
+  dest: /tmp/get_service_ports.py
+
+- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ public_ip }}" > /tmp/services.json
+
 - shell: jq '{name:.metadata.name,ports:.spec.ports}' /tmp/svc_ports.json > /tmp/node_ports.json
 - shell: jq -s '{services:[.[]]}' /tmp/node_ports.json  > /tmp/services_array.json
 - shell: jq '{ports:.spec.ports[].nodePort}' /tmp/svc_ports.json > /tmp/node_ports_for_wait.json
 - shell: jq -s '{node_ports:[.[]]}' /tmp/node_ports_for_wait.json > /tmp/test_ports.json
-
-
-
-
-#    - shell: python "{{ playbook_dir }}"/list_vms.py "{{hostvars['localhost']['credentials'][0]['keys']['aws_access_key_id']}}" "{{hostvars['localhost']['credentials'][0]['token']}}" "{{region}}" > /tmp/ec2_flavor_info_output_{{region}}.json
-#      when: not stat_result.stat.exists
