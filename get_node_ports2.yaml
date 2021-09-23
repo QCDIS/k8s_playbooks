@@ -1,5 +1,5 @@
 - shell: kubectl get svc --all-namespaces -o=jsonpath='{.items[*]}' | jq 'select(.spec.type=="NodePort")' > /tmp/svc_ports.json
 - shell: jq '{name:.metadata.name,ports:.spec.ports}' /tmp/svc_ports.json > /tmp/node_ports.json
-- shell: jq -s '{services:[.[]]}' /tmp/node_ports.json  > /tmp/node_ports_array.json
+- shell: jq -s '{services:[.[]]}' /tmp/node_ports.json  > /tmp/services_array.json
 - shell: jq '{ports:.spec.ports[].nodePort}' /tmp/svc_ports.json > /tmp/node_ports_for_wait.json
 - shell: jq -s '{node_ports:[.[]]}' /tmp/node_ports_for_wait.json > /tmp/test_ports.json

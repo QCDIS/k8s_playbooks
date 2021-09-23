@@ -12,14 +12,6 @@
 - hosts: master
   gather_facts: no
   tasks:
-          
-    - file:
-        state: absent
-        path: /tmp/node_ports/
-        
-    - file:
-        path: /tmp/node_ports/
-        state: directory
 
     - include:  get_node_ports2.yaml
         
@@ -52,25 +44,16 @@
       with_items: "{{ test_ports['node_ports'] }}"
 
 
-    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > out.json
+    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > /tmp/services_array_url_tmp.json
 
-    - shell: jq  -s '{services:[.[]]}'  out.json >  /tmp/services_array_url.json
+    - shell: jq  -s '{services:[.[]]}'  /tmp/services_array_url_tmp.json >  /tmp/services_array_url.json
 
-    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/node_ports_array.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
+    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array_url.json  | jq  -s '{urls:[.[]]}' > /tmp/urls.json
 
     - fetch:
         src: /tmp/urls.json
         dest: /tmp/urls.json
         flat: yes
-
-
-    - include_vars:
-        file: /tmp/urls.json
-        name: urls
-
-    - debug:
-        var: item.ports
-      with_items: "{{ urls['urls'] }}"
 
     - uri:
         url: "{{item.url}}"
