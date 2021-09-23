@@ -49,7 +49,7 @@
       with_items: "{{ test_ports['node_ports'] }}"
 
     - wait_for:
-        port: "{{item['ports']['ports']|int}}"
+        port: "{{item['ports']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
