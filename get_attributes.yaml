@@ -47,7 +47,7 @@
 
 
     - debug:
-        var: item
+        var: item.port
       with_items: "{{ ports }}"
 
     - wait_for:
