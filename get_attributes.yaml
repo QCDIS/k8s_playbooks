@@ -51,7 +51,7 @@
 
 
     - wait_for:
-        port: "{{item|int}}"
+        port: "{{item.port|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
