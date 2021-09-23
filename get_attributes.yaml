@@ -38,16 +38,15 @@
         name: services
 
     - debug:
-        var: services
+        var: item
+      with_items: "{{services['services']}}"
 
-
-#
-#    - wait_for:
-#        port: "{{item['ports']|int}}"
-#        host: "{{public_ip['json']['ip']}}"
-#        delay: 6
-#        timeout: 600
-#      with_items: "{{ test_ports['node_ports'] }}"
+    - wait_for:
+        port: "{{item['ports']|int}}"
+        host: "{{public_ip['json']['ip']}}"
+        delay: 6
+        timeout: 600
+      with_items: "{{services['services']}}"
 #
 #
 #    - shell: jq '.services[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.nodePort|tostring))}' /tmp/services_array.json > /tmp/services_array_url_tmp.json
