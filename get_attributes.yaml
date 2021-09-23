@@ -20,15 +20,8 @@
     - file:
         path: /tmp/node_ports/
         state: directory
-        
-        
-    - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
-      register: namespaces
-              
+
     - include:  get_node_ports2.yaml
-      vars:
-        k8s_namespace: "{{ item }}"
-      with_items: "{{namespaces.stdout_lines}}"
         
 
     - name: Get the public IP address of the network.
@@ -41,28 +34,22 @@
       retries: 10
       delay: 5
 
-    - shell: "jq -s '{all_ports:[.[]]}' /tmp/node_ports/service_port_*.json > /tmp/node_ports/all_ports.json"
-
-    - shell: jq '.all_ports[] |= .+{url:("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring))}' /tmp/node_ports/all_ports.json > /tmp/node_ports/all_ports_url.json
-
-    - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
-
     - fetch:
-        src: /tmp/node_ports/all_ports_url_unique_by.json
-        dest: /tmp/node_ports/all_ports_url_unique_by.json
+        src: /tmp/node_ports.json
+        dest: /tmp/node_ports.json
         flat: yes
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json
-        name: all_ports_url
+        file: /tmp/node_ports.json
+        name: node_ports
 
     - wait_for:
         port: "{{item['ports']['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
-      with_items: "{{ all_ports_url['all_ports'] }}"
+      with_items: "{{ node_ports['node_ports'] }}"
 
     - uri:
         url: "{{item.url}}"
@@ -71,10 +58,10 @@
       changed_when: false
       register: uri_out
       ignore_errors: yes
-      with_items: "{{ all_ports_url['all_ports'] }}"
+      with_items: "{{ node_ports['node_ports'] }}"
 
     - lineinfile:
-        path: /tmp/node_ports/all_ports_url_unique_by.json
+        path: /tmp/node_ports.json
         regexp: '{{item.url}}'
         line: '"url":"http{{item.url}}"'
         state: present
@@ -82,19 +69,9 @@
       when: item.failed
 
     - replace:
-        path: /tmp/node_ports/all_ports_url_unique_by.json
+        path: /tmp/node_ports.json
         regexp: 'httphttps'
         replace: 'http'
-
-    - fetch:
-        src: /tmp/node_ports/all_ports_url_unique_by.json
-        dest: /tmp/node_ports/all_ports_url_unique_by.json
-        flat: yes
-
-
-    - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json
-        name: all_ports_url_unique_by
 
     - include: get_dashboard_token.yaml
 
