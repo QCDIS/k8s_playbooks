@@ -42,8 +42,8 @@
 
 
     - set_fact:
-        ports: "{{ ports + item }}"
-      with_items: "{{services['services']['ports']}}"
+        ports: "{{ ports + item.ports }}"
+      with_items: "{{services['services']}}"
 
 
     - debug:
