@@ -41,7 +41,7 @@
 
 
     - include_vars:
-        file: /tmp/node_ports.json
+        file: /tmp/test_ports.json
         name: test_ports
 
     - debug:
