@@ -59,7 +59,6 @@
         file: /tmp/urls.json
         name: urls
 
-
     - uri:
         url: "{{item.url}}"
         method: Get
@@ -68,6 +67,17 @@
       register: uri_out
       ignore_errors: yes
       with_items: "{{ urls['urls'] }}"
+
+
+    - shell: jq '.services[] | select(.ports[].nodePort=="{{item['ports']|int}}") | {service_name:.name,port:.ports[].nodePort,port_name:.ports[].name,"url":("https://{{public_ip['json']['ip']}}:"+(.ports[].nodePort|tostring))}' /tmp/services_array.json
+      with_items: "{{ test_ports['node_ports'] }}"
+      register: node_ports_services
+
+
+    - debug:
+        var: node_ports_services
+
+
 
     - lineinfile:
         path: /tmp/services_array_url.json
