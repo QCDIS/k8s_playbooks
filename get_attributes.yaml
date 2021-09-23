@@ -55,6 +55,11 @@
         dest: /tmp/urls.json
         flat: yes
 
+    - include_vars:
+        file: /tmp/urls.json
+        name: urls
+
+
     - uri:
         url: "{{item.url}}"
         method: Get
