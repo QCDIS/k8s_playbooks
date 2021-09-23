@@ -44,10 +44,6 @@
         file: /tmp/test_ports.json
         name: test_ports
 
-    - debug:
-        var: item.ports
-      with_items: "{{ test_ports['node_ports'] }}"
-
     - wait_for:
         port: "{{item['ports']|int}}"
         host: "{{public_ip['json']['ip']}}"
@@ -70,6 +66,12 @@
         file: /tmp/urls.json
         name: urls
 
+    - debug:
+        var: item.ports
+      with_items: "{{ urls['urls'] }}"
+
+
+
     - uri:
         url: "{{item.url}}"
         method: Get
@@ -77,7 +79,7 @@
       changed_when: false
       register: uri_out
       ignore_errors: yes
-      with_items: "{{ urls['url'] }}"
+      with_items: "{{ urls['urls'] }}"
 
     - lineinfile:
         path: /tmp/node_ports_array_url.json
