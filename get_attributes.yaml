@@ -35,25 +35,27 @@
       delay: 5
 
     - fetch:
-        src: /tmp/node_ports.json
-        dest: /tmp/node_ports.json
+        src: /tmp/test_ports.json
+        dest: /tmp/test_ports.json
         flat: yes
 
 
     - include_vars:
         file: /tmp/node_ports.json
-        name: node_ports
+        name: test_ports
 
     - debug:
-        var: item
-      with_items: "{{ node_ports['node_ports'] }}"
+        var: item.ports
+      with_items: "{{ test_ports['node_ports'] }}"
 
     - wait_for:
-        port: "{{item['ports'][item.key]['port']|int}}"
+        port: "{{item['ports']['ports']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
-      with_items: "{{ node_ports['node_ports'] }}"
+      with_items: "{{ test_ports['node_ports'] }}"
+
+    - shell:  jq '.node_ports[].ports[] | . + {"url":("https://{{public_ip['json']['ip']}}:"+(.item[]|tostring))}' /tmp/node_ports_array.json > /tmp/node_ports_array_url.json
 
     - uri:
         url: "{{item.url}}"
