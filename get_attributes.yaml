@@ -44,8 +44,12 @@
         file: /tmp/node_ports.json
         name: node_ports
 
+    - debug:
+        var: item
+      with_items: "{{ node_ports['node_ports'] }}"
+
     - wait_for:
-        port: "{{item['ports']['port']|int}}"
+        port: "{{item['ports'][item.key]['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
