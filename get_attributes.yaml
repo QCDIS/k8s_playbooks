@@ -64,13 +64,13 @@
 
 
 
-#    - lineinfile:
-#        path: /tmp/services.json
-#        regexp: '{{item.url}}'
-#        line: '"url":"http{{item.url}}"'
-#        state: present
-#      with_items: "{{ uri_out.results }}"
-#      when: item.failed
+    - lineinfile:
+        path: /tmp/services.json
+        regexp: '{{item.url}}'
+        line: '"url":"http{{item.url}}"'
+        state: present
+      with_items: "{{ uri_out.results }}"
+      when: item.failed
 
 #    - replace:
 #        path: /tmp/services.json
