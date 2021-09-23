@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
                 port_info = {'name': port['name'], 'url': url, 'port':port[port_type_lower_first]}
                 port_infos.append(port_info)
-            service['ports'] = port_infos
+            service['info'] = port_infos
 
             services_array.append(service)
     services = {'services':services_array}

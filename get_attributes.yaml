@@ -42,7 +42,7 @@
 
 
     - set_fact:
-        ports: "{{ ports + item.ports }}"
+        ports: "{{ ports + item.info }}"
       with_items: "{{services['services']}}"
 
 
@@ -51,7 +51,7 @@
 
 
     - wait_for:
-        port: "{{item.port|int}}"
+        port: "{{item.info.port|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
