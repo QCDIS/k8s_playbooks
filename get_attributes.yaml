@@ -50,10 +50,11 @@
     - fetch:
         src: /tmp/node_ports/all_ports_url_unique_by.json
         dest: /tmp/node_ports/all_ports_url_unique_by.json
+        flat: yes
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json/m_0/tmp/node_ports/all_ports_url_unique_by.json
+        file: /tmp/node_ports/all_ports_url_unique_by.json
         name: all_ports_url
 
     - wait_for:
@@ -88,10 +89,11 @@
     - fetch:
         src: /tmp/node_ports/all_ports_url_unique_by.json
         dest: /tmp/node_ports/all_ports_url_unique_by.json
+        flat: yes
 
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json/{{ansible_host}}/tmp/node_ports/all_ports_url_unique_by.json
+        file: /tmp/node_ports/all_ports_url_unique_by.json
         name: all_ports_url_unique_by
 
     - include: get_dashboard_token.yaml
