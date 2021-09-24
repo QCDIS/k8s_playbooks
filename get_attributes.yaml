@@ -12,24 +12,6 @@
 - hosts: master
   gather_facts: no
   tasks:
-          
-    - file:
-        state: absent
-        path: /tmp/node_ports/
-        
-    - file:
-        path: /tmp/node_ports/
-        state: directory
-        
-        
-    - shell: kubectl get ns -o json | jq -r '.items[].metadata.name'
-      register: namespaces
-              
-    - include:  get_node_ports2.yaml
-      vars:
-        k8s_namespace: "{{ item }}"
-      with_items: "{{namespaces.stdout_lines}}"
-        
 
     - name: Get the public IP address of the network.
       uri:
@@ -41,61 +23,73 @@
       retries: 10
       delay: 5
 
-    - shell: "jq -s '{all_ports:[.[]]}' /tmp/node_ports/service_port_*.json > /tmp/node_ports/all_ports.json"
 
-    - shell: jq '.all_ports[] |= .+{url:("https://{{public_ip['json']['ip']}}:"+(.ports.port|tostring))}' /tmp/node_ports/all_ports.json > /tmp/node_ports/all_ports_url.json
-
-    - shell: jq '.all_ports|= unique_by(.ports.port)' /tmp/node_ports/all_ports_url.json > /tmp/node_ports/all_ports_url_unique_by.json
+    - include:  get_node_ports2.yaml
+      vars:
+        ip: "{{public_ip['json']['ip']}}"
 
     - fetch:
-        src: /tmp/node_ports/all_ports_url_unique_by.json
-        dest: /tmp/node_ports/all_ports_url_unique_by.json
-
+        src:  /tmp/services.json
+        dest:  /tmp/services.json
+        flat: yes
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json/master/tmp/node_ports/all_ports_url_unique_by.json
-        name: all_ports_url
+        file: /tmp/services.json
+        name: services
+
+    - set_fact:
+        ports: []
+
+
+    - set_fact:
+        ports: "{{ ports + item.info }}"
+      with_items: "{{services['services']}}"
+
 
     - wait_for:
-        port: "{{item['ports']['port']|int}}"
+        port: "{{item['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
         delay: 6
         timeout: 600
-      with_items: "{{ all_ports_url['all_ports'] }}"
+      with_items: "{{ports}}"
 
     - uri:
-        url: "{{item.url}}"
+        url: "{{ item['url'] }}"
         method: Get
         validate_certs: no
       changed_when: false
       register: uri_out
       ignore_errors: yes
-      with_items: "{{ all_ports_url['all_ports'] }}"
+      with_items: "{{ ports }}"
+
+
+    - shell: jq . /tmp/services.json > /tmp/services_prety.json
 
     - lineinfile:
-        path: /tmp/node_ports/all_ports_url_unique_by.json
+        path: /tmp/services_prety.json
         regexp: '{{item.url}}'
-        line: '"url":"http{{item.url}}"'
+        line: '          "url":"http{{item.url}}",'
         state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
 
     - replace:
-        path: /tmp/node_ports/all_ports_url_unique_by.json
+        path: //tmp/services_prety.json
         regexp: 'httphttps'
         replace: 'http'
 
     - fetch:
-        src: /tmp/node_ports/all_ports_url_unique_by.json
-        dest: /tmp/node_ports/all_ports_url_unique_by.json
-
+        src:  /tmp/services_prety.json
+        dest:  /tmp/services_prety.json
+        flat: yes
 
     - include_vars:
-        file: /tmp/node_ports/all_ports_url_unique_by.json/master/tmp/node_ports/all_ports_url_unique_by.json
-        name: all_ports_url_unique_by
+        file: /tmp/services_prety.json
+        name: services
+
+
 
     - include: get_dashboard_token.yaml
-
 
     - set_fact:
         credential:
@@ -108,20 +102,20 @@
         data:
           kubernetes:
             config: "{{kube_config}}"
-            services: "{{ all_ports_url_unique_by.all_ports }}"
+            services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
-#
-##    - debug:
-##        var: argo_token
-##      when: argo_token is defined
-#
-#    - set_stats:
-#        data:
-#          kubernetes:
-#            config: "{{kube_config}}"
-#            service_urls: "{{ node_ports.stdout_lines }}"
-#            tokens:
-#              - "{{ credential }}"
-#              - "{{ argo_token }}"
-#      when: argo_token is defined
+
+    - debug:
+        var: argo_token
+      when: argo_token is defined
+
+    - set_stats:
+        data:
+          kubernetes:
+            config: "{{kube_config}}"
+            services: "{{ services['services'] }}"
+            tokens:
+              - "{{ credential }}"
+              - "{{ argo_token }}"
+      when: argo_token is defined
