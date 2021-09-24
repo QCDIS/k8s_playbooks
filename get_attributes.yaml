@@ -62,28 +62,21 @@
       ignore_errors: yes
       with_items: "{{ ports }}"
 
-    - replace:
-        path: /tmp/services.json
-        regexp: "{{ item.url }}"
-        replace: "http{{ item.url }}"
+
+    - shell: jq . /tmp/services.json > /tmp/services_prety.json
+
+    - lineinfile:
+        path: /tmp/services_prety.json
+        regexp: '{{item.url}}'
+        line: '"url":"http{{item.url}}"'
+        state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
--
 
-
-#
-#    - lineinfile:
-#        path: /tmp/services.json
-#        regexp: '{{item.url}}'
-#        line: '"url":"http{{item.url}}"'
-#        state: present
-#      with_items: "{{ uri_out.results }}"
-#      when: item.failed
-
-#    - replace:
-#        path: /tmp/services.json
-#        regexp: 'httphttps'
-#        replace: 'http'
+    - replace:
+        path: //tmp/services_prety.json
+        regexp: 'httphttps'
+        replace: 'http'
 
 #    - fetch:
 #        src:  /tmp/services.json
