@@ -68,7 +68,7 @@
     - lineinfile:
         path: /tmp/services_prety.json
         regexp: '{{item.url}}'
-        line: '"url":"http{{item.url}}"'
+        line: '"url":"http{{item.url}}",'
         state: present
       with_items: "{{ uri_out.results }}"
       when: item.failed
