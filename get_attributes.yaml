@@ -24,7 +24,7 @@
       delay: 5
 
 
-    - include:  get_node_ports2.yaml
+    - include:  get_node_ports.yaml
       vars:
         ip: "{{public_ip['json']['ip']}}"
 

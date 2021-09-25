@@ -1,17 +1,7 @@
-- name: Get a list of services
-  k8s_info:
-    kind: Service
-    namespace: "{{ k8s_namespace }}"
-  register: k8s_services
-  
-- name: "query node ports cluster names"
-  debug:
-    var: item
-  loop: "{{ k8s_services |  json_query('resources[?spec.type==`NodePort`].spec.ports[*].nodePort') }}"
-  register: node_ports
+- shell: kubectl get svc --all-namespaces -o=jsonpath='{.items[*]}' | jq 'select(.spec.type=="NodePort")' | jq -s '.' > /tmp/svc_ports.json
 
 - copy:
-    content: "{{ node_ports }}"
-    dest: /tmp/node_ports/{{ k8s_namespace }}.json
-    
-- shell: "tr -d '\n' < /tmp/node_ports/{{ k8s_namespace }}.json > /tmp/node_ports/{{ k8s_namespace }}_clean.json && mv /tmp/node_ports/{{ k8s_namespace }}_clean.json /tmp/node_ports/{{ k8s_namespace }}.json"
+    src: "{{ playbook_dir }}/get_service_ports.py"
+    dest: /tmp/get_service_ports.py
+
+- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ ip }}" > /tmp/services.json
