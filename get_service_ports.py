@@ -21,8 +21,11 @@ if __name__ == '__main__':
                 url = 'https://' + public_ip + ':' + str(port[port_type_lower_first])
                 url_entry = {'url':url}
                 urls.append(url_entry)
-                print(port)
-                port_info = {'name': port['name'], 'url': url, 'port':port[port_type_lower_first]}
+                if 'name' in port:
+                    port_name = port['name']
+                else:
+                    port_name = port_type_lower_first
+                port_info = {'name': port_name, 'url': url, 'port':port[port_type_lower_first]}
                 port_infos.append(port_info)
             service['info'] = port_infos
 
