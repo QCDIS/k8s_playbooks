@@ -90,6 +90,8 @@
 
 
     - include: get_dashboard_token.yaml
+    
+    - include: get_argo_token.yaml
 
     - set_fact:
         credential:
