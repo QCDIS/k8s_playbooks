@@ -4,3 +4,4 @@
   
 - shell: SECRET=$(kubectl get sa jenkins -o=jsonpath='{.secrets[0].name}') && ARGO_TOKEN="Bearer $(kubectl get secret $SECRET -o=jsonpath='{.data.token}' | base64 --decode)" && echo $ARGO_TOKEN
   register: argo_token
+  ignore_errors: yes
