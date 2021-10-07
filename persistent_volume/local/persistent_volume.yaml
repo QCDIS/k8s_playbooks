@@ -4,7 +4,7 @@ metadata:
   name: local-pv-sdc
 spec:
   capacity:
-    storage: 440Gi
+    storage: 30Gi
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
