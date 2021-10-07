@@ -99,6 +99,8 @@
           token: "{{k8s_dashboard_token.stdout}}"
 
     - include: get_k8s_conf.yaml
+    
+    - include: get_pvs.yaml
 
     - set_stats:
         data:
@@ -107,10 +109,8 @@
             services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
+            pvs: "{{ pvs }}"
 
-    - debug:
-        var: argo_token
-      when: argo_token is defined
 
     - set_stats:
         data:
@@ -120,4 +120,5 @@
             tokens:
               - "{{ credential }}"
               - "{{ argo_token }}"
+            pvs: "{{ pvs }}"
       when: argo_token is defined
