@@ -1,1 +1,2 @@
-all
+shell: kubectl get pv -o=jsonpath='{}'
+register: pvs
