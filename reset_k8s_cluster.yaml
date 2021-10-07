@@ -40,5 +40,3 @@
       - "-P OUTPUT ACCEPT"
       - "-P FORWARD ACCEPT"
       - "-F"
-
-

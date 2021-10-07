@@ -4,6 +4,7 @@
   vars:
       ansible_python_interpreter: /usr/bin/python3
   tasks:         
+
     - name: join cmd
       shell: kubeadm token create --print-join-command
       register: k8_join_cmd  
@@ -13,35 +14,36 @@
         name:   "k8s_join_cmd_holder"
         cmd:  "{{ k8_join_cmd.stdout }}"
         
-#     - name:
-#       debug:
-#         msg: "Join command is {{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-        
+    - name: Fetch the conf from master
+      fetch: 
+        src: ${HOME}/.kube/config
+        dest: /tmp/k8s_config
+        flat: yes
                 
 - hosts: worker
   gather_facts: no
   tasks:
   
+    - file:
+        path: ~/.kube
+        state: directory
+     
+    - name: Copy conf to worker
+      copy: 
+        src: /tmp/k8s_config
+        dest: ${HOME}/.kube/config
+
+  
     - name: check if in cluster
       uri:
         url: http://localhost:10248/healthz
       register: url_command_result
-      ignore_errors: True
-       
-#     - name: print kubectl cluster return code
-#       debug:
-#         msg: "error message : {{url_command_result.status}}"   
-
-#     - name: print K8S_TOKEN
-#       debug:
-#         msg: "[Worker] K8S_TOKEN_HOLDER K8S token is {{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
-#       when: url_command_result.status != 200
-      
+      ignore_errors: True    
       
     - name: disable swap
       become: yes
       shell: swapoff -a    
-      when: url_command_result.status != 200
+#       when: url_command_result.status != 200
       
       
     - name: Add the br_netfilter module
@@ -49,8 +51,6 @@
       modprobe:
         name: br_netfilter
         state: present      
-
-        
         
     - name: update sysctl param
       become: yes
@@ -71,25 +71,60 @@
     - name: join
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
-      when: url_command_result.status != 200
-        
-        
-# - hosts: master
-#   tasks: 
+#       when: url_command_result.status != 200  
+    
+    - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
+      register: k8s_nodes_output
+      retries: 70
+      delay: 3
+      until: groups['all'] | length | int - 1 == k8s_nodes_output.stdout_lines | length
+      
+#     - systemd:
+#         state: restarted
+#         daemon_reload: yes
+#         name: "{{item}}"
+#       with_items:
+#         - "docker"
+#         - "kubelet"
+#       when: url_command_result.status != 200
+#       become: yes
+     
+      
+#     - reboot:
+#       become: yes
+#       when: url_command_result.status != 200
 
-#     - name: get nodes
-#       shell: kubectl get nodes
-#       register: nodes_out
-              
-#     - name: print nodes
-#       debug:
-#         var: nodes_out
+#     - name: Wait for the reboot to complete if there was a change.
+#       wait_for_connection:
+#         connect_timeout: 20
+#         sleep: 5
+#         delay: 5
+#         timeout: 300
+#       when: url_command_result.status != 200
+      
+
+#     - name: join
+#       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
+#       become: yes
+#       when: url_command_result.status != 200
+      
+#     - shell: kubectl get nodes -o json | jq -rc .
+#       register: k8s_nodes_output
+# #       until: k8s_nodes_output == "READY"
+# #       retries: 10
+# #       delay: 1
+    
+#     - debug: 
+#         var: k8s_nodes_output
+    
+#     - fetch: 
+#         src: /tmp/k8s_output_nodes
+#         dest: /tmp/k8s_output_nodes
+#         flat: yes
         
+
+#     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
         
-#     - name: get api key
-#       shell: kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t'
-#       register: api_key
-              
-#     - name: print api_key
-#       debug:
-#         var: api_key
+#     - debug: 
+#         var: "{{ groups['all'] | length }}"
+      

@@ -1,8 +1,9 @@
 - name: Wait for automatic system updates
-  shell: while sudo fuser /var/lib/dpkg/{{ item }} >/dev/null 2>&1; do sleep 3; done;
+  shell: while fuser /var/lib/dpkg/{{ item }} >/dev/null 2>&1; do sleep 3; done;
   with_items:
     - lock
     - lock-frontend
+  become: yes
 
 - name: Check for Python
   raw: test -e /usr/bin/python
@@ -31,18 +32,24 @@
 #     - name: Install aptitude using apt
 #       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
 
-- name: Install required packages
-  apt:
-    name: "{{ packages }}"
-    update_cache: yes
-  vars:
-    packages:
+
+- package:
+    name: 
     - ca-certificates
     - apt-transport-https
     - curl
     - gnupg2
     - software-properties-common        
     - python3-pip
-    - python-pip      
+#     - python-pip      
     - virtualenv
     - firewalld
+    - jq 
+    state: present
+  become: yes
+     
+
+- pip:
+    name:
+      - openshift==0.11.0
+      - kubernetes==11.0.0

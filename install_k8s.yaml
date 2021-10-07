@@ -1,5 +1,6 @@
 - hosts: all
   become: yes
+  gather_facts: no
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
@@ -14,11 +15,44 @@
         repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
         state: present
 
+#     - package:
+#         name:
+#           - kubeadm=1.21
+#           - kubelet=1.21
+#           - kubectl=1.21
+#           - kubernetes-cni=1.21
+#         state: present
+
+
+
     - name: Install Kubernetes Packages
       apt:
         pkg:
-        - kubeadm
-        - kubelet
-        - kubectl
-        - kubernetes-cni
+          - kubelet=1.20.2-00 
+          - kubeadm=1.20.2-00 
+          - kubectl=1.20.2-00
+          
+#     - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
+#       with_items:
+#         - "8080/tcp"
+#         - "6443/tcp"
+#         - "10250/tcp"
+#         - "30000-32767/tcp"
+#       register: firewall_out
+      
+#     - debug:
+#         var: firewall_out
+
+    - firewalld:
+        port: "{{item}}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      with_items:
+        - "8080/tcp"
+        - "6443/tcp"
+        - "10248-10255/tcp"
+        - "30000-32767/tcp"
+        - "2379-2380/tcp"
+
 

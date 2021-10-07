@@ -1,0 +1,11 @@
+
+
+- fetch: 
+    src: ${HOME}/.kube/config
+    dest: kube_config.yaml
+    flat: yes
+    
+
+- include_vars:
+    file: kube_config.yaml
+    name: kube_config

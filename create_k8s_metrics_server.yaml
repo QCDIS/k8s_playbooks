@@ -12,31 +12,40 @@
         name:
           - openshift==0.11.0
           - kubernetes==11.0.0
+      register: task_result
+      until: task_result.rc == 0
+      retries: 10
+      delay: 1
+      ignore_errors: yes
 
     - file:
         path: /tmp/metrics_server
         state: directory
 
+#     - get_url:
+#         url: https://raw.githubusercontent.com/QCDIS/k8s_playbooks/main/metrics_server/{{item}}
+#         dest: /tmp/metrics_server/{{item}}
+#       with_items:
+#         - aggregated-metrics-reader.yaml
+#         - auth-delegator.yaml
+#         - auth-reader.yaml
+#         - metrics-apiservice.yaml
+#         - metrics-server-deployment.yaml
+#         - metrics-server-service.yaml
+#         - resource-reader.yaml
     - get_url:
-        url: https://raw.githubusercontent.com/QCDIS/DevOpsTutorial/winter-school-21/K8s/metrics_server/{{item}}
-        dest: /tmp/metrics_server/{{item}}
-      with_items:
-        - aggregated-metrics-reader.yaml
-        - auth-delegator.yaml
-        - auth-reader.yaml
-        - metrics-apiservice.yaml
-        - metrics-server-deployment.yaml
-        - metrics-server-service.yaml
-        - resource-reader.yaml
+        url: https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        dest: /tmp/metrics_server/components.yaml
+
 
     - k8s:
         state: "{{k8s_state}}"
-        src: /tmp/metrics_server/{{item}}
-      with_items:
-        - aggregated-metrics-reader.yaml
-        - auth-delegator.yaml
-        - auth-reader.yaml
-        - metrics-apiservice.yaml
-        - metrics-server-deployment.yaml
-        - metrics-server-service.yaml
-        - resource-reader.yaml
+        src: /tmp/metrics_server/components.yaml
+#       with_items:
+#         - aggregated-metrics-reader.yaml
+#         - auth-delegator.yaml
+#         - auth-reader.yaml
+#         - metrics-apiservice.yaml
+#         - metrics-server-deployment.yaml
+#         - metrics-server-service.yaml
+#         - resource-reader.yaml
