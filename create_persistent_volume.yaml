@@ -1,11 +1,15 @@
 ---
 - hosts: all
   gather_facts: no
+  become: yes
   tasks:
 
     - file:
         path: "{{ pv['spec']['local']['path'] }}"   
         state: directory
+        
+    - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
+    
 
 
 - hosts: master
