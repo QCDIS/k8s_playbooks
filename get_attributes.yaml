@@ -74,7 +74,7 @@
       when: item.failed
 
     - replace:
-        path: //tmp/services_prety.json
+        path: /tmp/services_prety.json
         regexp: 'httphttps'
         replace: 'http'
 
@@ -90,6 +90,8 @@
 
 
     - include: get_dashboard_token.yaml
+    
+    - include: argo/get_argo_token.yaml
 
     - set_fact:
         credential:
