@@ -1,2 +1,13 @@
-shell: kubectl get pv -o=jsonpath='{}'
-register: pvs
+- shell: kubectl get pv -o=jsonpath='{}' > /tmp/pvs.yaml
+
+
+- fetch: 
+    src: /tmp/pvs.yaml
+    dest: /tmp/pvs.yaml
+    flat: yes
+    
+
+- include_vars:
+    file: /tmp/pvs.yaml
+    name: pvs
+    
