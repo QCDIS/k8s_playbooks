@@ -5,14 +5,14 @@
   tasks:
 
     - file:
-        path: "{{ pv['spec']['local']['path'] }}"   
+        path: "{{ local_path }}"
         state: directory
         
     - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
 
 #    - name: Mount tmpfs
 #      mount:
-#        path: "{{ pv['spec']['local']['path'] }}"
+#        path: "{{ local_path }}"
 #        src: k8_pv
 #        fstype: tmpfs
 #        state: present
@@ -43,9 +43,30 @@
         file: /tmp/node_names.yaml
         name: node_names
 
-
+    - set_fact:
+        pv:
+          apiVersion: v1
+          kind: PersistentVolume
+          metadata:
+            name: local-pv
+          spec:
+            capacity:
+              storage: "{{ storage_capacity }}"
+            accessModes:
+              - ReadWriteOnce
+            persistentVolumeReclaimPolicy: Retain
+            storageClassName: local-storage
+            local:
+              path: "{{ local_path }}"
+            nodeAffinity:
+              required:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values: "{{ node_names['node_names'] }}"
     - debug:
-        var: node_names['node_names']
+        var: pv
 
 #
 #    - copy:
