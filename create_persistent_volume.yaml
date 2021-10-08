@@ -65,10 +65,6 @@
                       - key: kubernetes.io/hostname
                         operator: In
                         values: "{{ node_names['node_names'] }}"
-    - debug:
-        var: pv
-
-
     - copy:
         content: "{{ pv }}"
         dest: /tmp/pv.yaml
