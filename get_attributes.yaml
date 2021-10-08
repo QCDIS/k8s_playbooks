@@ -99,8 +99,6 @@
           token: "{{k8s_dashboard_token.stdout}}"
 
     - include: get_k8s_conf.yaml
-    
-    - include: get_pvs.yaml
 
     - set_stats:
         data:
