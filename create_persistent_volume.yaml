@@ -8,7 +8,7 @@
         path: "{{ local_path }}"
         state: directory
         
-    - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
+    - shell: mount -t tmpfs k8_pv "{{ local_path }}"
 
 #    - name: Mount tmpfs
 #      mount:
