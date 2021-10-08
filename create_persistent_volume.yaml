@@ -31,21 +31,21 @@
         state: present
         src: /tmp/local_storage-class.yaml
 
-    - shell: kubectl get nodes -o=jsonpath='{}' > /tmp/nodes.yaml
+    - shell: kubectl get nodes -o=jsonpath='{.items[*].metadata}' | jq .name | jq -s '{node_names:.}' > /tmp/node_names.yaml
 
 
     - fetch:
-        src: /tmp/nodes.yaml
-        dest: /tmp/nodes.yaml
+        src: /tmp/node_names.yaml
+        dest: /tmp/node_names.yaml
         flat: yes
 
     - include_vars:
-        file: /tmp/nodes.yaml
-        name: nodes
+        file: /tmp/node_names.yaml
+        name: node_names
 
 
     - debug:
-        var: nodes
+        var: node_names['node_names']
 
 #
 #    - copy:
