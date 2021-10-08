@@ -68,15 +68,15 @@
     - debug:
         var: pv
 
-#
-#    - copy:
-#        content: "{{ pv }}"
-#        dest: /tmp/pv.yaml
-#
-#
-#    - k8s:
-#        state: present
-#        src: /tmp/pv.yaml
+
+    - copy:
+        content: "{{ pv }}"
+        dest: /tmp/pv.yaml
+
+
+    - k8s:
+        state: present
+        src: /tmp/pv.yaml
 #
 #    - shell: kubectl get pv -o="jsonpath={}"
 #      register: pv_output
