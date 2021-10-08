@@ -10,12 +10,12 @@
         
 #    - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
 
-      - name: Mount tmpfs
-        mount:
-          path: "{{ pv['spec']['local']['path'] }}"
-          src: k8_pv
-          fstype: tmpfs
-          state: present
+    - name: Mount tmpfs
+      mount:
+        path: "{{ pv['spec']['local']['path'] }}"
+        src: k8_pv
+        fstype: tmpfs
+        state: present
 
 #
 #- hosts: master
