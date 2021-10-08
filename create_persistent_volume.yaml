@@ -77,7 +77,7 @@
     - k8s:
         state: present
         src: /tmp/pv.yaml
-#
-#    - shell: kubectl get pv -o="jsonpath={}"
-#      register: pv_output
+
+    - shell: kubectl get pv -o="jsonpath={}"
+      register: pv_output
 
