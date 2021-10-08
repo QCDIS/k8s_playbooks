@@ -17,19 +17,36 @@
 #        fstype: tmpfs
 #        state: present
 
-#
-#- hosts: master
-#  gather_facts: no
-#  tasks:
-#
-#    - get_url:
-#        url: https://raw.githubusercontent.com/QCDIS/k8s_playbooks/master/persistent_volume/local/local_storage-class.yaml
-#        dest: /tmp/local_storage-class.yaml
-#
-#
-#    - k8s:
-#        state: present
-#        src: /tmp/local_storage-class.yaml
+
+- hosts: master
+  gather_facts: no
+  tasks:
+
+    - get_url:
+        url: https://raw.githubusercontent.com/QCDIS/k8s_playbooks/master/persistent_volume/local/local_storage-class.yaml
+        dest: /tmp/local_storage-class.yaml
+
+
+    - k8s:
+        state: present
+        src: /tmp/local_storage-class.yaml
+
+    - shell: kubectl get nodes -o=jsonpath='{}' > /tmp/nodes.yaml
+
+
+    - fetch:
+        src: /tmp/nodes.yaml
+        dest: /tmp/nodes.yaml
+        flat: yes
+
+    - include_vars:
+        file: /tmp/nodes.yaml
+        name: nodes
+
+
+    - debug:
+        var: nodes
+
 #
 #    - copy:
 #        content: "{{ pv }}"
