@@ -107,7 +107,6 @@
             services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
-            pvs: "{{ pvs }}"
 
 
     - set_stats:
@@ -118,5 +117,4 @@
             tokens:
               - "{{ credential }}"
               - "{{ argo_token }}"
-            pvs: "{{ pvs }}"
       when: argo_token is defined
