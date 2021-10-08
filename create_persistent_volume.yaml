@@ -8,32 +8,38 @@
         path: "{{ pv['spec']['local']['path'] }}"   
         state: directory
         
-    - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
-    
+#    - shell: mount -t tmpfs k8_pv "{{ pv['spec']['local']['path'] }}"
 
+      - name: Mount tmpfs
+        mount:
+          path: "{{ pv['spec']['local']['path'] }}"
+          src: k8_pv
+          fstype: tmpfs
+          state: present
 
-- hosts: master
-  gather_facts: no
-  tasks:
-
-    - get_url:
-        url: https://raw.githubusercontent.com/QCDIS/k8s_playbooks/master/persistent_volume/local/local_storage-class.yaml
-        dest: /tmp/local_storage-class.yaml
-
-
-    - k8s:
-        state: present
-        src: /tmp/local_storage-class.yaml
-
-    - copy:
-        content: "{{ pv }}"
-        dest: /tmp/pv.yaml
-
-
-    - k8s:
-        state: present
-        src: /tmp/pv.yaml
-
-    - shell: kubectl get pv -o="jsonpath={}"
-      register: pv_output
+#
+#- hosts: master
+#  gather_facts: no
+#  tasks:
+#
+#    - get_url:
+#        url: https://raw.githubusercontent.com/QCDIS/k8s_playbooks/master/persistent_volume/local/local_storage-class.yaml
+#        dest: /tmp/local_storage-class.yaml
+#
+#
+#    - k8s:
+#        state: present
+#        src: /tmp/local_storage-class.yaml
+#
+#    - copy:
+#        content: "{{ pv }}"
+#        dest: /tmp/pv.yaml
+#
+#
+#    - k8s:
+#        state: present
+#        src: /tmp/pv.yaml
+#
+#    - shell: kubectl get pv -o="jsonpath={}"
+#      register: pv_output
 
