@@ -9,6 +9,7 @@
         pkg:
         - jq
         state: present
+        update_cache: yes
       become: yes
 
     - include: disk/mount.yaml
