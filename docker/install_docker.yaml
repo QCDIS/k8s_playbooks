@@ -10,9 +10,8 @@
     path: "{{ item }}"
   register: mount_volume
   with_item:
-    - /dev/sdc
-    - /dev/xvdh
-
+    - "/dev/sdc"
+    - "/dev/xvdh"
 
 - name: Update
   apt:
