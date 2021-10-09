@@ -4,6 +4,13 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
+    - name: install pkg
+      apt:
+        pkg:
+        - jq
+        state: present
+      become: yes
+
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
     - include: install_k8s_prerequisites.yaml
