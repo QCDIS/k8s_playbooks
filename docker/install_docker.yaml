@@ -5,13 +5,22 @@
     - lock-frontend
   become: yes
 
+#- name: Check that extra mount exists
+#  stat:
+#    path: "{{ item }}"
+#  register: mount_volume
+#  with_item:
+#    - "/dev/sdc"
+#    - "/dev/xvdh"
 - name: Check that extra mount exists
   stat:
-    path: "{{ item }}"
+    path: /dev/xvdh
   register: mount_volume
-  with_item:
-    - "/dev/sdc"
-    - "/dev/xvdh"
+
+- name: Check that extra mount exists
+  stat:
+    path: /dev/sdc
+  register: mount_volume
 
 - name: Update
   apt:
