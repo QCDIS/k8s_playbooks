@@ -1,13 +1,22 @@
+- shell: lshw -json -class disk > out.json
+  become: yes
+
+- shell: jq -r 'select(.capabilities==null) | .logicalname ' out.json
+  register: dev_path
+
+- debug:
+    var: dev_path.stdout
+
 - name: Check that the "{{ dev_path }}" exists
   stat:
-    path: "{{ dev_path }}"
+    path: "{{ dev_path.stdout }}"
   register: mount_volume
 
 
 - name: Create a xfs
   filesystem:
     fstype: xfs
-    dev: "{{ dev_path }}"
+    dev: "{{ dev_path.stdout }}"
   when: mount_volume.stat.exists == True
 
 
@@ -20,7 +29,7 @@
 - name: Mount 
   mount:
     path: /data
-    src: "{{ dev_path }}"
+    src: "{{ dev_path.stdout }}"
     state: present
     fstype: xfs
   when: mount_volume.stat.exists == True    
@@ -37,6 +46,6 @@
   when: mount_volume.stat.exists        
 
 - name: Mount manualy
-  shell: 'mount "{{ dev_path }}" /data'
+  shell: 'mount "{{ dev_path.stdout }}" /data'
   when: mount_volume.stat.exists        
   ignore_errors: yes      

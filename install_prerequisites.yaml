@@ -4,29 +4,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
-    - name: Check ec2 dev
-      stat:
-        path: /dev/xvdh
-      register: ec2_volume
-
-    - name: Check azure dev
-      stat:
-        path: /dev/sdc
-      register: azure_volume
-
-    - set_fact:
-        vol: /dev/sdc
-      when: azure_volume.stat.exists == True
-
-    - set_fact:
-        vol: /dev/xvdh
-      when: ec2_volume.stat.exists == True
-
-    - name: Mount
-      vars:
-        dev_path: "{{ vol }}"
-      include_tasks: disk/mount.yaml
-
+    - include: disk/mount.yaml
     - include: docker/install_docker.yaml
     - include: install_k8s_prerequisites.yaml
     
