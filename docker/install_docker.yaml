@@ -5,13 +5,6 @@
     - lock-frontend
   become: yes
 
-#- name: Check that extra mount exists
-#  stat:
-#    path: "{{ item }}"
-#  register: mount_volume
-#  with_item:
-#    - "/dev/sdc"
-#    - "/dev/xvdh"
 - name: Check that extra mount exists
   stat:
     path: /dev/xvdh
@@ -121,5 +114,4 @@
     name: docker
     state: restarted
   ignore_errors: yes
-#   when: mount_volume.stat.exists == True
   become: yes

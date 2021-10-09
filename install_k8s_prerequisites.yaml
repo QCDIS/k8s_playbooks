@@ -28,7 +28,6 @@
     - gnupg2
     - software-properties-common        
     - python3-pip
-#     - python-pip      
     - virtualenv
     - firewalld
     - jq 

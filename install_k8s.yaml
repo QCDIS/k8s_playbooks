@@ -3,6 +3,7 @@
   gather_facts: no
   vars:
     ansible_python_interpreter: /usr/bin/python3
+
   tasks:
 
     - name: Add the Kubernetes signing key
@@ -20,16 +21,6 @@
       until: task_result.rc == 0
       retries: 10
       delay: 1
-
-#     - package:
-#         name:
-#           - kubeadm=1.21
-#           - kubelet=1.21
-#           - kubectl=1.21
-#           - kubernetes-cni=1.21
-#         state: present
-
-
 
     - name: Install Kubernetes Packages
       apt:
