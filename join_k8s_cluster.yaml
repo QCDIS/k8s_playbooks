@@ -27,6 +27,7 @@
     - file:
         path: ~/.kube
         state: directory
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1
@@ -35,6 +36,7 @@
       copy: 
         src: /tmp/k8s_config
         dest: ${HOME}/.kube/config
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1
@@ -48,7 +50,8 @@
       
     - name: disable swap
       become: yes
-      shell: swapoff -a    
+      shell: swapoff -a
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1
@@ -59,7 +62,8 @@
       become: yes    
       modprobe:
         name: br_netfilter
-        state: present      
+        state: present
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1
@@ -74,6 +78,7 @@
       with_items:
         - net.bridge.bridge-nf-call-ip6tables
         - net.ipv4.ip_forward
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1
@@ -82,13 +87,11 @@
       shell: kubeadm reset -f
       become: yes     
       ignore_errors: True
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
         
     - name: join
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
+      register: task_result
       until: task_result.rc == 0
       retries: 10
       delay: 1

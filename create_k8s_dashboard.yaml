@@ -30,23 +30,10 @@
 
     - name: create clusterrolebinding
       shell: kubectl create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
-
-#     - name: Get a list of secrets in default ns
-#       k8s_info:
-#         kind: secret
-#         namespace: default
-#       register: k8s_secrets
-      
-#     - name: print k8s_secrets
-#       debug:
-#         var: k8s_secrets      
       
     - name: get k8s_dashboard_token
       shell: kubectl get secret -n kubernetes-dashboard -o json | jq -r '.items[] | select(.metadata.name | contains("kubernetes-dashboard-token")) | .data.token' | base64 -d
       register: k8s_dashboard_token
-#       until: k8s_dashboard_token.stdout.find("token") != -1
-#       retries: 10
-#       delay: 1
   
     - name: print k8s_dashboard_token
       debug:
