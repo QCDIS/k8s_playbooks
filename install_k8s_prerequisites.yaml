@@ -19,19 +19,6 @@
     name: firewalld
     state: present
 
-#     - name: autoremove and autoclean
-#       apt: 
-#         autoclean: yes
-#         autoremove: yes          
-
-#     - name: Update and upgrade apt packages
-#       apt:
-#         upgrade: yes
-#         update_cache: yes 
-
-#     - name: Install aptitude using apt
-#       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
-
 
 - package:
     name: 
