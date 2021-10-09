@@ -11,9 +11,12 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
       register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
+    - debug:
+        var: task_result
+#      until: task_result.rc == 0
+#      retries: 10
+#      delay: 1
 
     - name: Add kubernetes
       apt_repository:

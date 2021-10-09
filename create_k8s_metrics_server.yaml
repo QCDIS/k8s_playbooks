@@ -12,11 +12,6 @@
         name:
           - openshift==0.11.0
           - kubernetes==11.0.0
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
-      ignore_errors: yes
 
     - file:
         path: /tmp/metrics_server
