@@ -27,19 +27,13 @@
     - file:
         path: ~/.kube
         state: directory
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
      
     - name: Copy conf to worker
       copy: 
         src: /tmp/k8s_config
         dest: ${HOME}/.kube/config
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
 
   
     - name: check if in cluster
@@ -51,10 +45,7 @@
     - name: disable swap
       become: yes
       shell: swapoff -a
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
 #       when: url_command_result.status != 200
       
       
@@ -63,10 +54,7 @@
       modprobe:
         name: br_netfilter
         state: present
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
         
     - name: update sysctl param
       become: yes
@@ -78,10 +66,7 @@
       with_items:
         - net.bridge.bridge-nf-call-ip6tables
         - net.ipv4.ip_forward
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
         
     - name: kubeadm reset -f
       shell: kubeadm reset -f
@@ -91,10 +76,7 @@
     - name: join
       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
       become: yes
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
 #       when: url_command_result.status != 200  
     
     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'

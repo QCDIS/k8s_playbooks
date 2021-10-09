@@ -11,21 +11,15 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
       register: task_result
-
-    - debug:
-        var: task_result
-#      until: task_result.rc == 0
-#      retries: 10
-#      delay: 1
+      until: not task_result.failed
+      retries: 10
+      delay: 1
 
     - name: Add kubernetes
       apt_repository:
         repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
         state: present
-      register: task_result
-      until: task_result.rc == 0
-      retries: 10
-      delay: 1
+
 
     - name: Install Kubernetes Packages
       apt:
