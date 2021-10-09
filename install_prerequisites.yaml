@@ -22,9 +22,11 @@
         vol: /dev/xvdh
       when: ec2_volume.stat.exists == True
 
-    - include: disk/mount.yaml
-        vars:
-          dev_path: "{{ vol }}"
+    - name: Mount
+      vars:
+        dev_path: "{{ vol }}"
+      include_tasks: disk/mount.yaml
+
     - include: docker/install_docker.yaml
     - include: install_k8s_prerequisites.yaml
     
