@@ -5,7 +5,7 @@
     ansible_python_interpreter: /usr/bin/python3
   tasks:
     
-    - include: ec2/ec2_mount.yaml
+    - include: ec2/azure_mount.yaml
     - include: docker/install_docker.yaml
     - include: install_k8s_prerequisites.yaml
     

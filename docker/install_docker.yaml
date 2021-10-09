@@ -5,11 +5,15 @@
     - lock-frontend
   become: yes
 
-- name: Check that the /dev/xvdh exists
+- name: Check that extra mount exists
   stat:
-    path: /dev/xvdh
+    path: "{{ item }}"
   register: mount_volume
-#
+  with_item:
+    - /dev/sdc
+    - /dev/xvdh
+
+
 - name: Update
   apt:
     update_cache: yes
@@ -21,17 +25,6 @@
   shell: apt update
   when: update_result.failed == True
   become: yes
-
-# - name: remove a list of packages
-#   apt:
-#     pkg:
-#     - docker
-#     - docker-engine
-#     - docker.io
-#     - containerd
-#     - runc
-#     state: absent
-#   become: yes
 
 - package:
     name: 
@@ -90,14 +83,6 @@
 - shell: "dpkg --configure -a"
   become: yes
 
-# - name: Install docker
-#   apt:
-#     pkg:
-#     - docker-ce
-#     - docker-ce-cli
-#     - containerd.io
-#   become: yes
-  
 - package:
     name: 
     - docker-ce
@@ -106,13 +91,6 @@
     - jq 
     state: present
   become: yes
-  
- 
-# - shell: echo '{"exec-opts":["native.cgroupdriver=systemd"]}' > /etc/docker/daemon.json
-  
-# - shell: echo '{"data-root": "data"}'  > /tmp/daemon.json 
-#   when: mount_volume.stat.exists == True
-
 
 - copy:
     src: "{{ playbook_dir }}/docker/daemon.json"
