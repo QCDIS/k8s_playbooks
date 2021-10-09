@@ -9,11 +9,17 @@
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
+      until: task_result.rc == 0
+      retries: 10
+      delay: 1
 
     - name: Add kubernetes
       apt_repository:
         repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
         state: present
+      until: task_result.rc == 0
+      retries: 10
+      delay: 1
 
 #     - package:
 #         name:
@@ -31,17 +37,9 @@
           - kubelet=1.20.2-00 
           - kubeadm=1.20.2-00 
           - kubectl=1.20.2-00
-          
-#     - shell: firewall-cmd --permanent --zone=public --add-port="{{item}}"
-#       with_items:
-#         - "8080/tcp"
-#         - "6443/tcp"
-#         - "10250/tcp"
-#         - "30000-32767/tcp"
-#       register: firewall_out
-      
-#     - debug:
-#         var: firewall_out
+      until: task_result.rc == 0
+      retries: 10
+      delay: 1
 
     - firewalld:
         port: "{{item}}"
@@ -54,5 +52,8 @@
         - "10248-10255/tcp"
         - "30000-32767/tcp"
         - "2379-2380/tcp"
+      until: task_result.rc == 0
+      retries: 10
+      delay: 1
 
 
