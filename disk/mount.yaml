@@ -18,7 +18,7 @@
   when: xvdh_volume.stat.exists == False
 
 
-- shell: jq -r 'select(.capabilities==null) | .logicalname ' out.json
+- shell: cat out.json | jq -r 'select(.capabilities==null) | .logicalname'
   register: jq_output
   become: yes
   when: xvdh_volume.stat.exists == False
