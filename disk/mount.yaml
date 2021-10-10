@@ -1,16 +1,32 @@
+- name: Check that the /dev/xvdh exists
+  stat:
+    path: /dev/xvdh
+  register: xvdh_volume
+
+- set_fact:
+    dev_path: /dev/xvdh
+  when: xvdh_volume.stat.exists == True
+
 - shell: lshw -json -class disk > out.json
   become: yes
+  when: xvdh_volume.stat.exists == False
 
 - shell: jq -r 'select(.capabilities==null) | .logicalname ' out.json
-  register: dev_path
+  register: jq_output
   become: yes
+  when: xvdh_volume.stat.exists == False
 
 - debug:
-    var: dev_path.stdout
+    var: jq_output.stdout
+
+- set_fact:
+    dev_path: jq_output.stdout
+  when: xvdh_volume.stat.exists == False
+
 
 - name: Check that the "{{ dev_path }}" exists
   stat:
-    path: "{{ dev_path.stdout }}"
+    path: "{{ dev_path }}"
   register: mount_volume
 
 
