@@ -23,11 +23,8 @@
   become: yes
   when: xvdh_volume.stat.exists == False
 
-- debug:
-    var: jq_output.stdout
-
 - set_fact:
-    dev_path: jq_output.stdout
+    dev_path: "{{jq_output.stdout}}"
   when: xvdh_volume.stat.exists == False
 
 
