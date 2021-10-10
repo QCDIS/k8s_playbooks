@@ -33,7 +33,7 @@
 - name: Create a xfs
   filesystem:
     fstype: xfs
-    dev: "{{ dev_path.stdout }}"
+    dev: "{{ dev_path }}"
   when: mount_volume.stat.exists == True
 
 
@@ -46,7 +46,7 @@
 - name: Mount 
   mount:
     path: /data
-    src: "{{ dev_path.stdout }}"
+    src: "{{ dev_path }}"
     state: present
     fstype: xfs
   when: mount_volume.stat.exists == True    
@@ -63,6 +63,6 @@
   when: mount_volume.stat.exists        
 
 - name: Mount manualy
-  shell: 'mount "{{ dev_path.stdout }}" /data'
+  shell: 'mount "{{ dev_path }}" /data'
   when: mount_volume.stat.exists        
   ignore_errors: yes      
