@@ -6,9 +6,9 @@
   tasks:
 
 
-  - package:
-      name: jq
-      state: present
+    - package:
+        name: jq
+        state: present
 
 
     - include: disk/mount.yaml
