@@ -4,13 +4,12 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
-    - name: install pkg
-      apt:
-        pkg:
-        - jq
-        state: present
-        update_cache: yes
-      become: yes
+
+
+  - package:
+      name: jq
+      state: present
+
 
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
