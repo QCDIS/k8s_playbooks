@@ -11,6 +11,13 @@
   become: yes
   when: xvdh_volume.stat.exists == False
 
+- file:
+    path: out.json
+    mode: '777'
+  become: yes
+  when: xvdh_volume.stat.exists == False
+
+
 - shell: jq -r 'select(.capabilities==null) | .logicalname ' out.json
   register: jq_output
   become: yes
