@@ -5,10 +5,9 @@
     ansible_python_interpreter: /usr/bin/python3
   tasks:
 
-
-    - package:
+    - apt:
         name: lshw
-        state: present
+        update_cache: yes
 
     - snap:
         name:
