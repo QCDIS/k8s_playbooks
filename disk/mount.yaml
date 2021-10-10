@@ -37,6 +37,9 @@
   register: mount_volume
 
 
+- debug:
+    var: mount_volume
+
 - name: Create a xfs
   filesystem:
     fstype: xfs
@@ -44,11 +47,12 @@
   when: mount_volume.stat.exists == True
 
 
+
 - name: Creates directory
   file:
     path: /data
     state: directory
-  when: mount_volume.stat.exists == True         
+  when: mount_volume.stat.exists == True
 
 - name: Mount 
   mount:
@@ -56,7 +60,7 @@
     src: "{{ dev_path }}"
     state: present
     fstype: xfs
-  when: mount_volume.stat.exists == True    
+  when: mount_volume.stat.exists == True
 
 - name: check Mount 
   command: mountpoint -q /data
@@ -66,8 +70,8 @@
 
 
 - debug:
-    msg: volume_stat.rc {{ volume_stat.rc }} 
-  when: mount_volume.stat.exists        
+    msg: volume_stat.rc {{ volume_stat.rc }}
+  when: mount_volume.stat.exists
 
 - name: Mount manualy
   shell: 'mount "{{ dev_path }}" /data'
