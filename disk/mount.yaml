@@ -3,6 +3,7 @@
 
 - shell: jq -r 'select(.capabilities==null) | .logicalname ' out.json
   register: dev_path
+  become: yes
 
 - debug:
     var: dev_path.stdout
