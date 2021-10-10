@@ -5,11 +5,9 @@
     ansible_python_interpreter: /usr/bin/python3
   tasks:
 
-
-    - package:
-        name: jq
-        state: present
-
+    - snap:
+        name:
+          - jq
 
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
