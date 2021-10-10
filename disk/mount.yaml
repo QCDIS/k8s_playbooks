@@ -23,25 +23,16 @@
   become: yes
   when: xvdh_volume.stat.exists == False
 
-- debug:
-    var: jq_output.stdout
 
 - set_fact:
     dev_path: "{{ jq_output.stdout }}"
   when: xvdh_volume.stat.exists == False
-
-- debug:
-    var: dev_path
 
 
 - name: Check that the "{{ dev_path }}" exists
   stat:
     path: "{{ dev_path }}"
   register: mount_volume
-
-
-- debug:
-    var: mount_volume
 
 - name: Create a xfs
   filesystem:
@@ -70,11 +61,6 @@
   register: volume_stat
   failed_when: False
   changed_when: False
-
-
-- debug:
-    msg: volume_stat.rc {{ volume_stat.rc }}
-  when: mount_volume.stat.exists
 
 - name: Mount manualy
   shell: 'mount "{{ dev_path }}" /data'
