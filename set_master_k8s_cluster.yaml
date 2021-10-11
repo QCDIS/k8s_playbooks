@@ -10,7 +10,8 @@
     - set_fact:
         kuctl_weave_output_1: kuctl_weave_output
 
-    - include: reset.yaml
+    - name: Failed reset cluster
+      include: reset.yaml
       when: kuctl_weave_output_1.rc != 0
 
     - include: k8s-master.yaml
