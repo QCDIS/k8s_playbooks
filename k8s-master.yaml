@@ -92,21 +92,25 @@
 
 - name: kubeadm set weave
   shell: export kubever=$(kubectl version | base64 | tr -d '\n') && kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
-  register: kuctl_output
+  register: kuctl_weave_output
   until: kuctl_weave_output.rc == 0
   retries: 2
   delay: 0.5
+  igonre_errors: yes
 
 
 - name: kubectl taint nodes
   shell: kubectl taint nodes --all node-role.kubernetes.io/master-
-  when: kubectl_command_result.rc != 0
+  when: kubectl_command_result.rc != 0 and kuctl_weave_output.rc == 0
 
 - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited
   become: yes
   ignore_errors: yes
+  when: kuctl_weave_output.rc == 0
+
 
 
 - shell: iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
   become: yes
   ignore_errors: yes
+  when: kuctl_weave_output.rc == 0
