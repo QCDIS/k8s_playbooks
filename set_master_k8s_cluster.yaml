@@ -107,7 +107,7 @@
       
     - name: kubeadm set weave
       shell: export kubever=$(kubectl version | base64 | tr -d '\n') && kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
-      register: kuctl_output.rc
+      register: kuctl_output
       until: kuctl_output.rc == 0
       retries: 10
       delay: 0.5
