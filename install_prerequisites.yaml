@@ -6,7 +6,9 @@
   tasks:
 
     - apt:
-        name: lshw
+        name:
+        - lshw
+        - snap
         update_cache: yes
 
     - snap:
