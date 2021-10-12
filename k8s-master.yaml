@@ -1,8 +1,8 @@
 
-#- name: check kubectl
-#  shell: kubectl get all
-#  register: kubectl_command_result
-#  ignore_errors: True
+- name: check kubectl
+  shell: kubectl get all
+  register: kubectl_command_result
+  ignore_errors: True
 
 - name: Get the public IP address of the network.
   uri:
@@ -17,7 +17,7 @@
 - name: disable swap
   become: yes
   shell: swapoff -a
-#  when: kubectl_command_result.rc != 0
+  when: kubectl_command_result.rc != 0
 
 - name: kubeadm reset
   shell: kubeadm reset -f
