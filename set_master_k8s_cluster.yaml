@@ -10,15 +10,18 @@
     - debug:
         var: kuctl_weave_output
 
+    - set_fact:
+        kuctl_weave_output_1: kuctl_weave_output
+
     - name: Failed reset cluster
       include: reset.yaml
-      when: kuctl_weave_output.rc != 0
+      when: kuctl_weave_output_1.rc != 0
 
     - debug:
         var: kuctl_weave_output
 
     - include: k8s-master.yaml
-      when: kuctl_weave_output.rc != 0
+      when: kuctl_weave_output_1.rc != 0
 
     - debug:
         var: kuctl_weave_output
