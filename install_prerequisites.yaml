@@ -14,8 +14,8 @@
     - apt:
         name:
         - jq
-        igonre_errors: yes
-        register: apt_output
+      igonre_errors: yes
+      register: apt_output
 
     - debug:
         var: apt_output
