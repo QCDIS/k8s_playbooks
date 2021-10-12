@@ -7,19 +7,19 @@
 
     - include: k8s-master.yaml
 
-    - name: Failed reset cluster
-      include: reset.yaml
-      when: not set_master
-
-    - include: k8s-master.yaml
-      when: not set_master
-
-    - debug:
-        var: kuctl_weave_output
-
-    - fail:
-        msg: Failed "{{ kuctl_weave_output }}"
-      when: kuctl_weave_output.rc != 0
+#    - name: Failed reset cluster
+#      include: reset.yaml
+#      when: not set_master
+#
+#    - include: k8s-master.yaml
+#      when: not set_master
+#
+#    - debug:
+#        var: kuctl_weave_output
+#
+#    - fail:
+#        msg: Failed "{{ kuctl_weave_output }}"
+#      when: kuctl_weave_output.rc != 0
         
 - hosts: master
   gather_facts: no
