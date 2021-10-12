@@ -6,6 +6,9 @@
   tasks:
 
     - include: k8s-master.yaml
+      until: taint_nodes_result.rc == 0
+      retries: 5
+
 
 #    - name: Failed reset cluster
 #      include: reset.yaml
