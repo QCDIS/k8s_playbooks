@@ -6,20 +6,13 @@
   tasks:
 
     - include: k8s-master.yaml
-      register: task_output
-
-    - debug:
-        var: task_output
 
     - name: Failed reset cluster
       include: reset.yaml
-      when: kuctl_weave_output.rc != 0
-
-    - debug:
-        var: kuctl_weave_output
+      when: not set_master
 
     - include: k8s-master.yaml
-      when: kuctl_weave_output.rc != 0
+      when: not set_master
 
     - debug:
         var: kuctl_weave_output
