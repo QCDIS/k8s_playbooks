@@ -17,9 +17,6 @@
       register: package_output
       ignore_errors: yes
 
-    - debug:
-        var: package_output
-
     - snap:
         name:
           - jq
