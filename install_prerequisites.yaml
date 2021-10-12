@@ -10,20 +10,20 @@
         - lshw
         update_cache: yes
 
-
-    - apt:
+    - package:
         name:
         - jq
+        state: present
       igonre_errors: yes
-      register: apt_output
+      register: package_output
 
     - debug:
-        var: apt_output
+        var: package_output
 
     - snap:
         name:
           - jq
-      when: apt_output.rc =! 0
+      when: package_output.rc =! 0
 
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
