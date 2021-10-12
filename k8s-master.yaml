@@ -102,10 +102,8 @@
 - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited
   become: yes
   ignore_errors: yes
-  when: kuctl_weave_output.rc == 0
 
 
 - shell: iptables -D  FORWARD -j REJECT --reject-with icmp-host-prohibited
   become: yes
   ignore_errors: yes
-  when: kuctl_weave_output.rc == 0
