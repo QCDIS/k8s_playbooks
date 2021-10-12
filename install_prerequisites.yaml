@@ -8,12 +8,22 @@
     - apt:
         name:
         - lshw
-        - snap
         update_cache: yes
+
+
+    - apt:
+        name:
+        - jq
+        igonre_errors: yes
+        register: apt_output
+
+    - debug:
+        var: apt_output
 
     - snap:
         name:
           - jq
+      when: apt_output.rc =! 0
 
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
