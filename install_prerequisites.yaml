@@ -15,6 +15,7 @@
         - jq
         state: present
       register: package_output
+      ignore_errors: yes
 
     - debug:
         var: package_output
@@ -22,7 +23,7 @@
     - snap:
         name:
           - jq
-      when: package_output.rc =! 0
+      when: not package_output['failed']
 
     - include: disk/mount.yaml
     - include: docker/install_docker.yaml
