@@ -14,8 +14,8 @@
         name:
         - jq
         state: present
-      igonre_errors: yes
       register: package_output
+      igonre_errors: yes
 
     - debug:
         var: package_output
