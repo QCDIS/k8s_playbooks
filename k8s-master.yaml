@@ -97,7 +97,7 @@
 
 - name: kubectl taint nodes
   shell: kubectl taint nodes --all node-role.kubernetes.io/master-
-  when: kubectl_command_result.rc != 0
+  when: kubectl_command_result.rc != 0 and kuctl_weave_output is defined and kuctl_weave_output.rc == 0
 
 - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited
   become: yes
