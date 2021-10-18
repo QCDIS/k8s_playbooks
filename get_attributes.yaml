@@ -107,9 +107,6 @@
             services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
-              
-    - debug:
-        var: argo_token
 
 
     - set_stats:
@@ -120,4 +117,4 @@
             tokens:
               - "{{ credential }}"
               - "{{ argo_token.stdout }}"
-      when: argo_token is defined and argo_token.rc == 0
+      when: argo_token is defined
