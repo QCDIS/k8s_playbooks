@@ -116,5 +116,5 @@
             services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
-              - "{{ argo_token.stdout }}"
+              - "{{ argo_token }}"
       when: argo_token is defined
