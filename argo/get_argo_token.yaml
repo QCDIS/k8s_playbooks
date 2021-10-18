@@ -2,12 +2,13 @@
 - shell: kubectl create role jenkins --verb=list,update --resource=workflows.argoproj.io  && kubectl create sa jenkins && kubectl create rolebinding jenkins --role=jenkins --serviceaccount=argo:jenkins
   ignore_errors: yes
   
-- shell: kubectl get sa jenkins -o=jsonpath='{.secrets[0].name}')
-  register: argo_token_scret
+- shell: kubectl get sa jenkins -o=jsonpath='{.secrets[0].name}'
+  register: argo_token_scret_cmd
   ignore_errors: yes
   
 - debug:
-    var: argo_token_scret
+    var: argo_token_scret_cmd
   
 - shell: SECRET=$(kubectl get sa jenkins -o=jsonpath='{.secrets[0].name}') && ARGO_TOKEN="Bearer $(kubectl get secret $SECRET -o=jsonpath='{.data.token}' | base64 --decode)" && echo $ARGO_TOKEN
-  when: argo_token_scret.rc == 0 
+  when: argo_token_scret_cmd.rc == 0 
+  register: argo_token
