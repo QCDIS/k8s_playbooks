@@ -107,6 +107,9 @@
             services: "{{ services['services'] }}"
             tokens:
               - "{{ credential }}"
+              
+    - debug:
+        var: argo_token
 
 
     - set_stats:
