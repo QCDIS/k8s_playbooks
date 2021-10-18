@@ -6,5 +6,8 @@
   register: argo_token_scret
   ignore_errors: yes
   
+- debug:
+    var: argo_token_scret
+  
 - shell: SECRET=$(kubectl get sa jenkins -o=jsonpath='{.secrets[0].name}') && ARGO_TOKEN="Bearer $(kubectl get secret $SECRET -o=jsonpath='{.data.token}' | base64 --decode)" && echo $ARGO_TOKEN
   when: argo_token_scret.rc == 0 
