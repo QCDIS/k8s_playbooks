@@ -45,7 +45,6 @@
         ports: "{{ ports + item.info }}"
       with_items: "{{services['services']}}"
 
-
     - wait_for:
         port: "{{item['port']|int}}"
         host: "{{public_ip['json']['ip']}}"
@@ -63,10 +62,10 @@
       with_items: "{{ ports }}"
 
 
-    - shell: jq . /tmp/services.json > /tmp/services_prety.json
+    - shell: jq . /tmp/services.json > /tmp/services_pretty.json
 
     - lineinfile:
-        path: /tmp/services_prety.json
+        path: /tmp/services_pretty.json
         regexp: '{{item.url}}'
         line: '          "url":"http{{item.url}}",'
         state: present
@@ -74,17 +73,17 @@
       when: item.failed
 
     - replace:
-        path: /tmp/services_prety.json
+        path: /tmp/services_pretty.json
         regexp: 'httphttps'
         replace: 'http'
 
     - fetch:
-        src:  /tmp/services_prety.json
-        dest:  /tmp/services_prety.json
+        src:  /tmp/services_pretty.json
+        dest:  /tmp/services_pretty.json
         flat: yes
 
     - include_vars:
-        file: /tmp/services_prety.json
+        file: /tmp/services_pretty.json
         name: services
 
 

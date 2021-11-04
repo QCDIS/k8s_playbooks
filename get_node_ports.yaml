@@ -1,4 +1,4 @@
-- shell: kubectl get svc --all-namespaces -o=jsonpath='{.items[*]}' | jq 'select(.spec.type=="NodePort")' | jq -s '.' > /tmp/svc_ports.json
+- shell: kubectl get svc --all-namespaces -o=jsonpath='{.items[*]}' | jq 'select(.spec.type=="NodePort" and .spec.ports[].protocol=="TCP")' | jq -s '.' > /tmp/svc_ports.json
 
 - copy:
     src: "{{ playbook_dir }}/get_service_ports.py"
