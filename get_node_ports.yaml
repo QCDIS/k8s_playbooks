@@ -4,4 +4,6 @@
     src: "{{ playbook_dir }}/get_service_ports.py"
     dest: /tmp/get_service_ports.py
 
-- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ ip }}" > /tmp/services.json
+- shell: python /tmp/get_service_ports.py  /tmp/svc_ports.json NodePort "{{ ip }}" > /tmp/nonunique_services.json
+
+- shell: jq '.services |= unique_by(.name)' /tmp/nonunique_services.json > /tmp/services.json
