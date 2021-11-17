@@ -89,6 +89,7 @@
   shell: docker pull ghcr.io/weaveworks/launcher/weave-kube:2.8.1
   register: pull_res
   become: yes
+  ignore_errors: yes
   
  
 - name: kubeadm set weave
