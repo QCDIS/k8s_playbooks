@@ -96,10 +96,10 @@
   shell: export kubever=$(kubectl version | base64 | tr -d '\n') && kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
   when: pull_res.rc == 0
   
-- name: kubeadm set weave
+- name: get kubectl version
   shell: kubectl version | base64 | tr -d '\n'
   when: pull_res.rc != 0
-  registaer: kubever
+  register: kubever
   
   
 - name: Download net.yaml
