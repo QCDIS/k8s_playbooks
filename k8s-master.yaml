@@ -62,7 +62,6 @@
   shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}"
   become: yes
 
-
 - name: Create directory .kube
   file:
     path: $HOME/.kube
