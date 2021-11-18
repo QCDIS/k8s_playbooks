@@ -103,6 +103,7 @@
   stat:
     path: /dev/sdc
   register: mount_volume
+  when: not mount_volume.stat.exists
   
 - debug:
     var: mount_volume
