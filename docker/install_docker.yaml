@@ -3,17 +3,8 @@
   with_items:
     - lock
     - lock-frontend
-  become: yes
-
-- name: Check that extra mount exists
-  stat:
-    path: /dev/xvdh
-  register: mount_volume
-
-- name: Check that extra mount exists
-  stat:
-    path: /dev/sdc
-  register: mount_volume
+  become: yes  
+  
 
 - name: Update
   apt:
@@ -102,8 +93,22 @@
   copy:
     src: "{{ playbook_dir }}/docker/daemon_data.json"
     dest: /tmp/daemon_data.json
+    
+- name: Check that extra mount exists
+  stat:
+    path: /dev/xvdh
+  register: mount_volume
+
+- name: Check that extra mount exists
+  stat:
+    path: /dev/sdc
+  register: mount_volume
   
-- shell: jq -s '.[0] * .[1]' /tmp/daemon_data.json /etc/docker/daemon.json > /tmp/daemon2.json    
+- debug:
+    var: mount_volume
+  
+- name: Marge /tmp/daemon_data.json /etc/docker/daemon.json
+  shell: jq -s '.[0] * .[1]' /tmp/daemon_data.json /etc/docker/daemon.json  > /tmp/daemon2.json    
   when: mount_volume.stat.exists == True
     
 - name: move /tmp/daemon2.json /etc/docker/daemon.json  
