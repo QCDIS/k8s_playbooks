@@ -96,14 +96,8 @@
     
 - name: Check that extra mount exists
   stat:
-    path: /dev/xvdh
+    path: /data
   register: mount_volume
-
-- name: Check that extra mount exists
-  stat:
-    path: /dev/sdc
-  register: mount_volume
-  when: not mount_volume.stat.exists
   
 - debug:
     var: mount_volume
