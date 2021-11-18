@@ -93,11 +93,13 @@
     state: present
   become: yes
 
-- copy:
+- name: copy "{{ playbook_dir }}/docker/daemon.json"
+  copy:
     src: "{{ playbook_dir }}/docker/daemon.json"
     dest: /etc/docker/daemon.json  
     
-- copy:
+- name: copy "{{ playbook_dir }}/docker/daemon_data.json"
+  copy:
     src: "{{ playbook_dir }}/docker/daemon_data.json"
     dest: /tmp/daemon_data.json
   
