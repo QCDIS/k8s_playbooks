@@ -55,6 +55,7 @@
         delay: 6
         timeout: 300
       with_items: "{{ports}}"
+      ignore_errors: yes
 
     - uri:
         url: "{{ item['url'] }}"
