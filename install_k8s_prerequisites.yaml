@@ -1,9 +1,9 @@
-- name: Wait for automatic system updates
-  shell: while fuser /var/lib/dpkg/{{ item }} >/dev/null 2>&1; do sleep 3; done;
-  with_items:
-    - lock
-    - lock-frontend
-  become: yes
+# - name: Wait for automatic system updates
+#   shell: while fuser /var/lib/dpkg/{{ item }} >/dev/null 2>&1; do sleep 3; done;
+#   with_items:
+#     - lock
+#     - lock-frontend
+#   become: yes
 
 - name: Check for Python
   raw: test -e /usr/bin/python
