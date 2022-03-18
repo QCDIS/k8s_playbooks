@@ -31,7 +31,6 @@
 
 - set_fact:
     dev_path: /dev/sdb
-  when: xvdh_volume.stat.exists == False
 
 
 - name: Check that the "{{ dev_path }}" exists
