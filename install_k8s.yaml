@@ -24,9 +24,12 @@
     - name: Install Kubernetes Packages
       apt:
         pkg:
-          - kubelet=1.20.2-00 
-          - kubeadm=1.20.2-00 
-          - kubectl=1.20.2-00
+          - kubelet
+          - kubeadm
+          - kubectl
+#           - kubelet=1.20.2-00 
+#           - kubeadm=1.20.2-00 
+#           - kubectl=1.20.2-00
 
     - firewalld:
         port: "{{item}}"
