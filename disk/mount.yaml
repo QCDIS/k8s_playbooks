@@ -62,7 +62,7 @@
   failed_when: False
   changed_when: False
 
-- name: Mount manualy
+- name: Mount manually
   shell: 'mount "{{ dev_path }}" /data'
   when: mount_volume.stat.exists        
   ignore_errors: yes      
