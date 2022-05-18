@@ -27,7 +27,8 @@
 - set_fact:
     dev_path: "{{ jq_output.stdout }}"
   when: xvdh_volume.stat.exists == False
-
+  
+  
 
 - name: Check that the "{{ dev_path }}" exists
   stat:
