@@ -22,7 +22,8 @@
           - jq
       when: not package_output['failed']
 
-    - include: disk/mount.yaml
-    - include: docker/install_docker.yaml
-    - include: install_k8s_prerequisites.yaml
+#    - include: disk/mount.yaml
+#    - include: docker/install_docker.yaml
+#    - include: install_k8s_prerequisites.yaml
+    - include: disk/install_nfs-common.yaml
     

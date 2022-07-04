@@ -1,0 +1,5 @@
+- package:
+    name:
+    - nfs-common
+    state: present
+  become: yes
