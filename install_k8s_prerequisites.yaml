@@ -12,7 +12,7 @@
   register: check_python    
 
 - name: Install Python
-  raw: apt -y update && apt install -y python3-minimal
+  raw: apt -y update && apt install -y python3
   when: check_python.rc != 0
 
 - package:
