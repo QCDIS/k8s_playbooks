@@ -4,15 +4,9 @@
   register: kubectl_command_result
   ignore_errors: True
 
-- name: Get the public IP address of the network.
-  uri:
-    url: https://api.ipify.org?format=json
-    method: Get
-  changed_when: false
-  register: public_ip
-  until: public_ip.status == 200
-  retries: 6
-  delay: 10
+- name: Get the private IP of the network
+  shell: ip addr | grep -Po "(?<=inet )((\d+\.){3}\d+)(?=/\d+ brd .*ens4)"
+  register: private_ip
 
 - name: disable swap
   become: yes
@@ -59,7 +53,7 @@
   become: yes
 
 - name: kubeadm init
-  shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="{{ public_ip.json.ip }}"
+  shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-advertise-address="{{ private_ip.stdout }}"
   become: yes
 
 - name: Create directory .kube
