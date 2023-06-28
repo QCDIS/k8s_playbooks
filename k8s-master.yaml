@@ -88,10 +88,6 @@
 - name: kubeadm set weave
   shell: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
   
-- name: kubectl taint nodes
-  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
-  register: taint_nodes_result
-
 - shell: iptables -D  INPUT -j REJECT --reject-with icmp-host-prohibited
   become: yes
   ignore_errors: yes
