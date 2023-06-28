@@ -8,6 +8,12 @@
     path: $HOME/.kube
 
 
+- name: stop firewalld
+  systemd:
+    state: stopped
+    name: firewalld
+  become: yes
+
 - name: reset iptables
   shell: "iptables {{ item }}"
   become: yes
@@ -16,3 +22,22 @@
   - "-P OUTPUT ACCEPT"
   - "-P FORWARD ACCEPT"
   - "-F"
+  - "-Z"
+  - "-X"
+
+- name: Clean firewalld
+  file:
+    state: absent
+    path: /etc/firewalld/zones
+  become: yes
+
+- file:
+    state: directory
+    path: /etc/firewalld/zones
+  become: yes
+
+- name: restart firewalld
+  systemd:
+    state: restarted
+    name: firewalld
+  become: yes
