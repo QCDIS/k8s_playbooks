@@ -84,6 +84,14 @@
     state: present
   become: yes
 
+- name: Reset containerd configuration
+  ansible.builtin.file:
+    state: absent
+    path: /etc/containerd/config.toml
+
+- name: Restart containerd
+  service: name=containerd state=restarted
+
 - name: copy "{{ playbook_dir }}/docker/daemon.json"
   copy:
     src: "{{ playbook_dir }}/docker/daemon.json"
