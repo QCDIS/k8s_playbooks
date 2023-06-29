@@ -3,19 +3,19 @@
   gather_facts: no
   vars:
       ansible_python_interpreter: /usr/bin/python3
-  tasks:         
+  tasks:
 
     - name: join cmd
       shell: kubeadm token create --print-join-command
-      register: k8_join_cmd  
-      
+      register: k8_join_cmd
+
     - name: Add join cmd to dummy host
       add_host:
         name:   "k8s_join_cmd_holder"
         cmd:  "{{ k8_join_cmd.stdout }}"
-        
+
     - name: Fetch the conf from master
-      fetch: 
+      fetch:
         src: ${HOME}/.kube/config
         dest: /tmp/k8s_config
         flat: yes
@@ -23,34 +23,34 @@
 - hosts: worker
   gather_facts: no
   tasks:
-  
+
     - file:
         path: ~/.kube
         state: directory
 
-     
+
     - name: Copy conf to worker
-      copy: 
+      copy:
         src: /tmp/k8s_config
         dest: ${HOME}/.kube/config
 
 
-  
+
     - name: check if in cluster
       uri:
         url: http://localhost:10248/healthz
       register: url_command_result
-      ignore_errors: True    
-      
+      ignore_errors: True
+
     - name: disable swap
       become: yes
       shell: swapoff -a
 
 #       when: url_command_result.status != 200
-      
-      
+
+
     - name: Add the br_netfilter module
-      become: yes    
+      become: yes
       modprobe:
         name: br_netfilter
         state: present
@@ -67,14 +67,14 @@
         - net.bridge.bridge-nf-call-ip6tables
         - net.ipv4.ip_forward
 
-        
+
     - name: kubeadm reset -f
       shell: kubeadm reset -f
-      become: yes     
+      become: yes
       ignore_errors: True
 
     - name: Get the private IP of the network
-      shell: ip addr | grep -Po "(?<=inet )((\d+\.){3}\d+)(?=/\d+ brd .*ens4)"
+      shell: ip addr | grep -Po "(?<=inet )((\d+\.){3}\d+)(?=/\d+ brd .*{{ internal_network_interface }})"
       register: private_ip
 
     - shell: echo "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}" | grep -Po '(?<=join )(\d+\.){3}\d+:\d+(?= )'
@@ -104,14 +104,14 @@
       shell: "kubeadm join --config worker_InitConfiguration.yaml"
       become: yes
 
-#       when: url_command_result.status != 200  
-    
+#       when: url_command_result.status != 200
+
     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
       register: k8s_nodes_output
       retries: 70
       delay: 3
       until: groups['all'] | length | int - 1 == k8s_nodes_output.stdout_lines | length
-      
+
 #     - systemd:
 #         state: restarted
 #         daemon_reload: yes
@@ -121,8 +121,8 @@
 #         - "kubelet"
 #       when: url_command_result.status != 200
 #       become: yes
-     
-      
+
+
 #     - reboot:
 #       become: yes
 #       when: url_command_result.status != 200
@@ -134,30 +134,30 @@
 #         delay: 5
 #         timeout: 300
 #       when: url_command_result.status != 200
-      
+
 
 #     - name: join
 #       shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
 #       become: yes
 #       when: url_command_result.status != 200
-      
+
 #     - shell: kubectl get nodes -o json | jq -rc .
 #       register: k8s_nodes_output
 # #       until: k8s_nodes_output == "READY"
 # #       retries: 10
 # #       delay: 1
-    
-#     - debug: 
+
+#     - debug:
 #         var: k8s_nodes_output
-    
-#     - fetch: 
+
+#     - fetch:
 #         src: /tmp/k8s_output_nodes
 #         dest: /tmp/k8s_output_nodes
 #         flat: yes
-        
+
 
 #     - shell: kubectl get nodes -o json | jq '.items[].status.conditions[4].status'
-        
-#     - debug: 
+
+#     - debug:
 #         var: "{{ groups['all'] | length }}"
-      
+
