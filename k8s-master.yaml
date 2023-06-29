@@ -52,8 +52,20 @@
 - shell: systemctl restart kubelet
   become: yes
 
+- name: create InitConfiguration
+  shell: |
+    echo '
+    apiVersion: kubeadm.k8s.io/v1beta3
+    kind: InitConfiguration
+    localAPIEndpoint:
+      advertiseAddress: "{{ private_ip.stdout }}"
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-ip: "{{ private_ip.stdout }}"
+    ' > master_InitConfiguration.yaml
+
 - name: kubeadm init
-  shell: kubeadm init --ignore-preflight-errors=NumCPU --apiserver-advertise-address="{{ private_ip.stdout }}"
+  shell: kubeadm init --ignore-preflight-errors=NumCPU --config master_InitConfiguration.yaml
   become: yes
 
 - name: Create directory .kube

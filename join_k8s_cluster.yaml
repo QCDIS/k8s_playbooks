@@ -72,9 +72,36 @@
       shell: kubeadm reset -f
       become: yes     
       ignore_errors: True
-        
+
+    - name: Get the private IP of the network
+      shell: ip addr | grep -Po "(?<=inet )((\d+\.){3}\d+)(?=/\d+ brd .*ens4)"
+      register: private_ip
+
+    - shell: echo "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}" | grep -Po '(?<=join )(\d+\.){3}\d+:\d+(?= )'
+      register: api_server_endpoint
+    - shell: echo "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}" | grep -Po '(?<=--token )\S+'
+      register: discovery_token
+    - shell: echo "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}" | grep -Po '(?<=--discovery-token-ca-cert-hash )\S+'
+      register: discovery_token_ca_cert_hash
+
+    - name: create InitConfiguration
+      shell: |
+        echo '
+        apiVersion: kubeadm.k8s.io/v1beta3
+        kind: JoinConfiguration
+        discovery:
+          bootstrapToken:
+            apiServerEndpoint: "{{ api_server_endpoint.stdout }}"
+            token: "{{ discovery_token.stdout }}"
+            caCertHashes:
+            - "{{ discovery_token_ca_cert_hash.stdout }}"
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-ip: "{{ private_ip.stdout }}"
+        ' > worker_InitConfiguration.yaml
+
     - name: join
-      shell: "{{ hostvars['k8s_join_cmd_holder']['cmd'] }}"
+      shell: "kubeadm join --config worker_InitConfiguration.yaml"
       become: yes
 
 #       when: url_command_result.status != 200  
