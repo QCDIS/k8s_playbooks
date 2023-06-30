@@ -1,0 +1,22 @@
+- hosts: master
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+
+    - shell: kubectl create ns kube-flannel
+    - shell: kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
+    - shell: helm repo add flannel https://flannel-io.github.io/flannel/
+    - shell: |
+        echo '
+        podCidr: "{{ pod_network_cidr }}"
+        flannel:
+          args:
+            - "--ip-masq"
+            - "--kube-subnet-mgr"
+            - "--iface={{ internal_network_interface }}"
+        ' > flannel_values.yaml
+    - shell: helm install flannel --namespace kube-flannel flannel/flannel -f flannel_values.yaml
+    - file:
+        path: flannel_values.yaml
+        state: absent
