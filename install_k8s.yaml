@@ -6,15 +6,7 @@
 
   tasks:
     - firewalld:
-        zone: internal
-        interface: ens4
-        permanent: yes
-        state: enabled
-        immediate: yes
-
-    - firewalld:
         port: "{{item}}"
-        zone: internal
         permanent: yes
         state: enabled
         immediate: yes
