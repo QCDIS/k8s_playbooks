@@ -16,3 +16,9 @@
   - "-P OUTPUT ACCEPT"
   - "-P FORWARD ACCEPT"
   - "-F"
+
+- name: clean CNI interfaces
+  shell: ip link delete {{ item }}
+  with_items:
+    - "flannel.1"
+    - "cni0"
