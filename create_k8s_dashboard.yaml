@@ -6,48 +6,38 @@
     k8s_namespace: kubernetes-dashboard
     k8s_dashboard_installed: lookup('env', 'k8s_dashboard_installed')
     ansible_python_interpreter: /usr/bin/python3
-  tasks:   
-            
-            
-    - name: Download k8s_dashboard.yaml
-      get_url:
-        url: https://raw.githubusercontent.com/QCDIS/playbooks/master/k8s/k8s_dashboard.yaml
-        dest: /tmp/k8s_dashboard.yaml         
+  tasks:
 
-
-
-#     - shell: kubectl delete ns kubernetes-dashboard 
-#       ignore_errors: yes
+    - name: copy dashboard configuration
+      copy:
+        src: "{{ playbook_dir }}/dashboard/dashboard.yaml"
+        dest: /tmp/k8s_dashboard.yaml
 
     - name: Create k8s_dashboard
       k8s:
         state: "{{k8s_state}}"
         src: /tmp/k8s_dashboard.yaml
 
-    - name: create clusterrolebinding
-      shell: kubectl delete clusterrolebinding serviceaccounts-cluster-admin 
+    - name: delete service account
+      shell: kubectl --namespace kubernetes-dashboard delete serviceaccount admin-user
+      ignore_errors: yes
+
+    - name: create service account
+      shell: kubectl --namespace kubernetes-dashboard create serviceaccount admin-user
+
+    - name: delete clusterrolebinding
+      shell: kubectl delete clusterrolebinding admin-user
       ignore_errors: yes
 
     - name: create clusterrolebinding
-      shell: kubectl create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
-      
-    - name: get k8s_dashboard_token
-      shell: kubectl get secret -n kubernetes-dashboard -o json | jq -r '.items[] | select(.metadata.name | contains("kubernetes-dashboard-token")) | .data.token' | base64 -d
+      shell: kubectl create clusterrolebinding admin-user --clusterrole=cluster-admin --group=system:serviceaccounts --user=admin-user
+
+    - name: get dashboard token
+      shell: kubectl -n kubernetes-dashboard create token admin-user
       register: k8s_dashboard_token
-  
-    - name: print k8s_dashboard_token
+
+    - name: print dashboard token
       debug:
-        var: k8s_dashboard_token
+        var: k8s_dashboard_token.stdout
       environment:
         k8s_dashboard_installed: True
-        
-        
-    - name: Get a list of services
-      k8s_info:
-        kind: Service
-        namespace: "{{ k8s_namespace }}"
-      register: k8s_services
-      
-    - name: print k8s_secrets
-      debug:
-        var: k8s_services              
