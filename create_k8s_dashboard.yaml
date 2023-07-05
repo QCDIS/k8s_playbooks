@@ -33,8 +33,10 @@
       shell: kubectl create clusterrolebinding admin-user --clusterrole=cluster-admin --group=system:serviceaccounts --user=admin-user
 
     - name: get dashboard token
-      shell: kubectl -n kubernetes-dashboard create token admin-user
+      shell: kubectl -n kubernetes-dashboard create token admin-user --duration 8760h -o yaml | tee dashboard_token.yaml
       register: k8s_dashboard_token
+
+    - shell: chmod 600 dashboard_token.yaml
 
     - name: print dashboard token
       debug:
