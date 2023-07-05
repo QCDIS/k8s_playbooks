@@ -1,0 +1,26 @@
+- hosts: master
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+
+    - file:
+        path: ingress_self_signed_cert
+        state: directory
+    - name: create self-signed SSL certificate
+      shell: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3650 -nodes -subj "/CN=Kubernetes Ingress Controller Fake Certificate" -keyout ingress_self_signed_cert/key.pem -out ingress_self_signed_cert/cert.pem
+
+    - name: copy ingress values
+      copy:
+        src: "{{ playbook_dir }}/ingress-nginx/values.yaml"
+        dest: nginx-ingress_values.yaml
+
+    - name: create namespace
+      shell: kubectl create namespace ingress-nginx
+      ignore_errors: yes
+
+    - name: store SSL certificate
+      shell: kubectl -n ingress-nginx create secret tls ingress-self-signed-tls --key ingress_self_signed_cert/key.pem --cert ingress_self_signed_cert/cert.pem
+
+    - name: install helm charts
+      shell: helm -n ingress-nginx upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx -f nginx-ingress_values.yaml
