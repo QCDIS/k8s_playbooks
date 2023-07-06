@@ -1,0 +1,13 @@
+---
+- import_playbook: install_prerequisites.yaml
+- import_playbook: reset_k8s_cluster.yaml
+- import_playbook: install_k8s.yaml
+- import_playbook: set_master_k8s_cluster.yaml
+- import_playbook: join_k8s_cluster.yaml
+- import_playbook: k8s_cni_install.yaml
+- hosts: master
+  tasks:
+    - name: install NFS provisioner
+      shell: helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner -f nfs-provisioner/values.yaml
+- import_playbook: create_k8s_dashboard.yaml
+- import_playbook: k8s_ingress_install.yaml
